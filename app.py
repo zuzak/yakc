@@ -6,6 +6,9 @@ import os
 app = Flask(__name__)
 
 
+def get_name(webm):
+    return os.path.splittext(webm)[0]
+
 def generate_webm_token(webm, salt=None):
     if not salt:
         salt = uuid4().hex
@@ -31,6 +34,8 @@ def get_trash_webms():
 
 @app.route('/<name>.webm')
 def serve_webm(name):
+    if request.accept_mimetypes.best_match(['video/webm', 'text/html']) == 'text/html':
+        return redirect(name)
     name = name + '.webm'
     if name not in get_all_webms():
         abort(404)
@@ -39,6 +44,19 @@ def serve_webm(name):
         abort(403)
 
     return send_from_directory('webms/all', name)
+
+@app.route('/<name>')
+def show_webm(name):
+    name = name + '.webm'
+    queue = 'pending'
+    if name not in get_safe_webms():
+        abort(404)
+    if name in get_good_webms():
+        queue = 'good'
+    elif name in get_bad_webms():
+        queue = 'bad'
+
+    return render_template('display.html', webm=name, queue=queue)
 
 @app.route('/')
 def serve_random():
@@ -49,15 +67,15 @@ def serve_random():
         abort(404)
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), count=len(pending))
 
-@app.route('/good')
+@app.route('/good/')
 def serve_good():
     try:
         webm = choice(get_good_webms())
     except IndexError:
         abort(404)
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good')
+    return render_template('display.html', webm=webm, queue='good')
 
-@app.route('/bad')
+@app.route('/bad/')
 def serve_bad():
     try:
         webm = choice(get_bad_webms())
