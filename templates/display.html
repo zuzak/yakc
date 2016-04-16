@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<html> <head>
 		<title>yakc</title>
 		<style>
 			body {
@@ -11,17 +10,56 @@
 				padding: 0;
 				position: absolute;
 				width: 100%;
-					text-align:center;
+				text-align:center;
 			}
+			.good { background-color: #252 }
+			.bad { background-color: #522 }
+			.ugly { background-color: #225 }
 			video {
 				max-height: 100%;
 				/* min-width: 100%; */
 			}
+			.tip{display:block;padding:2px;font-size:70%}
+			ul {
+				display:table;
+				border: 1px solid #333;
+				border-radius: 4px;
+				margin:auto;
+				padding: 5px;
+				padding-bottom: 0.5em;
+				list-style-type: none;
+				color: #777;
+			}
+			form {
+				position: fixed;
+				left: 1em;
+				top: 1em;
+			}
 		</style>
 	</head>
-	<body>
+	<body class="{{ queue }}">
 		<video autoplay controls loop>
 			<source src="{{ webm }}">
 		</video>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<ul class="flashes">
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}
+		<form action="/moderate" method="POST">
+			<input type="hidden" name="token" value="{{ token }}">
+			<input type="hidden" name="webm" value="{{ webm }}">
+
+		{% if not queue %}
+			<input type="submit" name="verdict" value="good">
+			<input type="submit" name="verdict" value="bad">
+		{% endif %}
+			<input type="submit" name="verdict" value="report">
+			<div class="tip">{{ count }}</div>
+		</form>
 	</body>
 </html>
