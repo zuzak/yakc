@@ -68,6 +68,7 @@ def serve_random():
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), count=len(pending))
 
 @app.route('/good/')
+@app.route('/', subdomain='good')
 def serve_good():
     try:
         webm = choice(get_good_webms())
@@ -76,6 +77,7 @@ def serve_good():
     return render_template('display.html', webm=webm, queue='good')
 
 @app.route('/bad/')
+@app.route('/', subdomain='bad')
 def serve_bad():
     try:
         webm = choice(get_bad_webms())
