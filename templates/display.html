@@ -14,6 +14,7 @@
 				font-family:monospace;
 			}
 			.good { background-color: #252 }
+			.best { background-color: #552 }
 			.bad { background-color: #522 }
 			.ugly { background-color: #225 }
 			video {
@@ -57,13 +58,18 @@
 		{% if not queue %}
 			<input type="submit" title="I like this video (wheat)" name="verdict" value="good">
 			<input type="submit" title="I don't like this video (chaff)" name="verdict" value="bad">
+		{% elif queue == 'good' %}
+			<input type="submit" onsubmit="return confirm('Feature this webm?');" title="This is the best video ever (feature it)" name="verdict" value="promote">
+			<input type="submit" title="This is the right place for this video (hold)" name="verdict" value="keep">
+			<input type="submit" onsubmit="return confirm('Are you sure you want to remove the good designation of this video?');" title="This video isn't good (return to staging)" name="verdict" value="demote">
+		{% else %}
+			<input type="submit" onsubmit="return confirm('Are you sure you want to report and delete this video?');" title="Nobody should ever see this video ever again (blight)" name="verdict" value="report">
 		{% endif %}
-			<input type="submit" title="Nobody should ever see this video ever again (blight)" name="verdict" value="report">
-			{% endif %}
+		{% endif %}
 			<ul>
 				{% if count %}
 				<li>
-					{{ count }} videos remaining
+					{{ count }} {{ queue }} videos
 				</li>
 				{% endif %}
 		{% with messages = get_flashed_messages() %}

@@ -20,11 +20,18 @@ def get_all_webms():
 def get_good_webms():
     return os.listdir('webms/good')
 
+def get_best_webms():
+    return os.listdir('webms/best')
+
 def get_bad_webms():
     return os.listdir('webms/bad')
 
 def get_safe_webms():
     return list(set(get_all_webms()) - set(get_trash_webms()))
+
+def get_quality_webms():
+    """Allows whitelisting of reports to stop the top-tier webms being 403'd"""
+    return list(set(get_good_webms()).union(get_best_webms()))
 
 def get_pending_webms():
     return list(set(get_safe_webms()) - set(get_good_webms()) - set(get_bad_webms()))
@@ -41,7 +48,8 @@ def serve_webm(name):
         abort(404)
 
     if name in get_trash_webms():
-        abort(403)
+        if name not in get_quality_webms():
+            abort(403)
 
     return send_from_directory('webms/all', name)
 
@@ -49,9 +57,14 @@ def serve_webm(name):
 def show_webm(name):
     name = name + '.webm'
     queue = 'pending'
-    if name not in get_safe_webms():
+    if name not in get_all_webms():
         abort(404)
-    if name in get_good_webms():
+    elif name not in get_safe_webms():
+        if name not in get_quality_webms():
+            abort(403)
+    if name in get_best_webms():
+        queue = 'best'
+    elif name in get_good_webms():
         queue = 'good'
     elif name in get_bad_webms():
         queue = 'bad'
@@ -71,19 +84,30 @@ def serve_random():
 @app.route('/', subdomain='good')
 def serve_good():
     try:
-        webm = choice(get_good_webms())
+        good = get_good_webms()
+        webm = choice(good)
     except IndexError:
         abort(404)
-    return render_template('display.html', webm=webm, queue='good')
+    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good))
+
+@app.route('/best/')
+@app.route('/', subdomain='best')
+def serve_best():
+    try:
+        webm = choice(get_best_webms())
+    except IndexError:
+        abort(404)
+    return render_template('display.html', webm=webm, queue='best')
 
 @app.route('/bad/')
 @app.route('/', subdomain='bad')
 def serve_bad():
     try:
-        webm = choice(get_bad_webms())
+        webms = get_bad_webms()
+        webm = choice(webms)
     except IndexError:
         abort(404)
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='bad')
+    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='bad', count=len(webms))
 
 def mark_good(webm):
     os.symlink('webms/all/'+webm, 'webms/good/'+webm)
@@ -93,6 +117,12 @@ def mark_bad(webm):
 
 def mark_ugly(webm):
     os.symlink('webms/all/'+webm, 'webms/trash/'+webm)
+
+def unmark_good(webm):
+    os.unlink('webms/good/'+webm)
+
+def mark_best(webm):
+    os.symlink('webms/all/'+webm, 'webms/best/'+webm)
 
 @app.route('/moderate', methods=['POST'])
 def moderate_webm():
@@ -111,6 +141,24 @@ def moderate_webm():
             status = mark_bad(webm)
         elif verdict == 'report':
             status = mark_ugly(webm)
+        elif verdict == 'demote':
+            if webm in get_good_webms():
+                unmark_good(webm)
+                flash('Demoted ' + webm)
+                return redirect('/good', 303)
+            else:
+                abort(400)
+        elif verdict == 'promote':
+            if webm in get_good_webms():
+                mark_best(webm)
+                unmark_good(webm)
+                flash('Promoted ' + webm)
+                return redirect('/good', 303)
+            else:
+                abort(400)
+        elif verdict == 'keep':
+            # TODO generalise
+            return redirect('/good')
         else:
             abort(400)
 
@@ -131,7 +179,8 @@ if __name__ == '__main__':
         'webms'
         'webms/good',
         'webms/bad',
-        'webms/trash'
+        'webms/trash',
+        'webms/best'
     ]
     for directory in required_dirs:
         if not os.path.exists(directory):
