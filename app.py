@@ -71,6 +71,7 @@ def serve_webm(name, domain=None):
 def show_webm(name, domain=None):
     name = name + '.webm'
     queue = 'pending'
+    token = None
     if name not in get_all_webms():
         abort(404)
     elif name not in get_safe_webms():
@@ -82,8 +83,9 @@ def show_webm(name, domain=None):
         queue = 'good'
     elif name in get_bad_webms():
         queue = 'bad'
+        token = generate_webm_token(name)
 
-    return render_template('display.html', webm=name, queue=queue, domain=domain)
+    return render_template('display.html', webm=name, queue=queue, token=token)
 
 @app.route('/')
 def serve_random():
