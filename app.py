@@ -2,6 +2,8 @@ from flask import Flask, send_from_directory, abort, render_template, request, f
 from random import choice
 from uuid import uuid4
 from hashlib import sha256
+import shutil
+import socket
 import os
 app = Flask(__name__)
 
@@ -39,8 +41,19 @@ def get_pending_webms():
 def get_trash_webms():
     return os.listdir('webms/trash')
 
+def get_held_webms():
+    return os.listdir('webms/good2')
+
+def get_unheld_good_webms():
+    return list(set(get_good_webms()) - set(get_held_webms()))
+
+def delete_holding_queue():
+    shutil.rmtree('webms/good2')
+    os.makedirs('webms/good2')
+
+@app.route('/<name>.webm',subdomain='<domain>')
 @app.route('/<name>.webm')
-def serve_webm(name):
+def serve_webm(name, domain=None):
     if request.accept_mimetypes.best_match(['video/webm', 'text/html']) == 'text/html':
         return redirect(name)
     name = name + '.webm'
@@ -53,8 +66,9 @@ def serve_webm(name):
 
     return send_from_directory('webms/all', name)
 
+@app.route('/<name>', subdomain='<domain>')
 @app.route('/<name>')
-def show_webm(name):
+def show_webm(name, domain=None):
     name = name + '.webm'
     queue = 'pending'
     if name not in get_all_webms():
@@ -69,7 +83,7 @@ def show_webm(name):
     elif name in get_bad_webms():
         queue = 'bad'
 
-    return render_template('display.html', webm=name, queue=queue)
+    return render_template('display.html', webm=name, queue=queue, domain=domain)
 
 @app.route('/')
 def serve_random():
@@ -77,14 +91,18 @@ def serve_random():
         pending = get_pending_webms()
         webm = choice(pending)
     except IndexError:
-        abort(404)
+        pass
+        #abort(404)
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), count=len(pending))
 
 @app.route('/good/')
 @app.route('/', subdomain='good')
 def serve_good():
     try:
-        good = get_good_webms()
+        good = get_unheld_good_webms()
+        if len(good) == 0:
+            delete_holding_queue()
+            good = get_unheld_good_webms()
         webm = choice(good)
     except IndexError:
         abort(404)
@@ -118,14 +136,32 @@ def mark_bad(webm):
 def mark_ugly(webm):
     os.symlink('webms/all/'+webm, 'webms/trash/'+webm)
 
+def mark_hold(webm):
+    os.symlink('webms/all/'+webm, 'webms/good2/'+webm)
+
 def unmark_good(webm):
     os.unlink('webms/good/'+webm)
 
+def unmark_bad(webm):
+    os.unlink('webms/bad/'+webm)
+
 def mark_best(webm):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.sendto('http://best.webm.website/' + webm + ' has been marked as "best"', (
+        'saraneth.lon.fluv.net',
+        41337
+    ) )
     os.symlink('webms/all/'+webm, 'webms/best/'+webm)
 
+@app.route('/good', subdomain='good')
+@app.route('/bad', subdomain='bad')
+@app.route('/best', subdomain='best')
+def redir_to_main():
+    return redirect('/')
+
 @app.route('/moderate', methods=['POST'])
-def moderate_webm():
+@app.route('/moderate', methods=['POST'], subdomain='<domain>')
+def moderate_webm(domain=None):
     webm = request.form['webm']
     token = request.form['token'].split(':')
     if not ( token[0]+':'+token[1] == generate_webm_token(webm, token[1]) ):
@@ -156,8 +192,16 @@ def moderate_webm():
                 return redirect('/good', 303)
             else:
                 abort(400)
+        elif verdict == 'forgive':
+            if webm in get_bad_webms():
+                unmark_bad(webm)
+                flash('Forgave ' + webm)
+                return redirect('/bad', 303)
+            else:
+                abort(400)
         elif verdict == 'keep':
-            # TODO generalise
+            if webm in get_unheld_good_webms():
+                mark_hold(webm)
             return redirect('/good')
         else:
             abort(400)
@@ -172,19 +216,25 @@ def moderate_webm():
 
 
 if __name__ == '__main__':
-    # probably should make this persist
-    app.secret_key = uuid4().hex
 
     required_dirs = [
         'webms'
         'webms/good',
         'webms/bad',
         'webms/trash',
-        'webms/best'
+        'webms/best',
+        'webms/good2'
     ]
     for directory in required_dirs:
         if not os.path.exists(directory):
             os.makedirs(directory)
+
+    # probably should make this persist
+    app.config.update(
+        DEBUG=True,
+        SECRET_KEY=uuid4().hex,
+        SERVER_NAME='webm.website'
+    )
 
     app.run(host='0.0.0.0', port=3000)
 

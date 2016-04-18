@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html> <head>
-		<title>yakc</title>
+		<title>webm website</title>
 		<style>
+/**
+
+  webm.website  <------+
+    ^   |              | forgive
+    |   | bad          |              report
+    |   +------> bad.webm.website ----------->  (webm deleted)
+    |   |
+    |   | good                        promote
+    |   +------> good.webm.website ---------->  best.webm.website
+    |                  |
+    |           demote |       'kept' webms will not display until
+    +------------------+       all other webms are similarly kept
+
+**/
 			body {
 				background-color: #222;
 				height: 100%;
@@ -50,38 +64,40 @@
 			<source src="/{{ webm }}">
 		</video>
 		</a>
-		<form action="/moderate" method="POST">
+		{% if not domain %}
+			<form action="/moderate" method="POST">
 			{% if token %}
-			<input type="hidden" name="token" value="{{ token }}">
-			<input type="hidden" name="webm" value="{{ webm }}">
+				<input type="hidden" name="token" value="{{ token }}">
+				<input type="hidden" name="webm" value="{{ webm }}">
 
-		{% if not queue %}
-			<input type="submit" title="I like this video (wheat)" name="verdict" value="good">
-			<input type="submit" title="I don't like this video (chaff)" name="verdict" value="bad">
-		{% elif queue == 'good' %}
-			<input type="submit" onsubmit="return confirm('Feature this webm?');" title="This is the best video ever (feature it)" name="verdict" value="promote">
-			<input type="submit" title="This is the right place for this video (hold)" name="verdict" value="keep">
-			<input type="submit" onsubmit="return confirm('Are you sure you want to remove the good designation of this video?');" title="This video isn't good (return to staging)" name="verdict" value="demote">
-		{% else %}
-			<input type="submit" onsubmit="return confirm('Are you sure you want to report and delete this video?');" title="Nobody should ever see this video ever again (blight)" name="verdict" value="report">
-		{% endif %}
-		{% endif %}
-			<ul>
-				{% if count %}
-				<li>
-					{{ count }} {{ queue }} videos
-				</li>
+				{% if not queue %}
+					<input type="submit" title="I like this video (wheat)" name="verdict" value="good">
+					<input type="submit" title="I don't like this video (chaff)" name="verdict" value="bad">
+				{% elif queue == 'good' %}
+					<input type="submit" onsubmit="return confirm('Feature this webm?');" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="promote">
+					<input type="submit" title="This is the right place for this video (enact hold)" name="verdict" value="keep">
+					<input type="submit" onsubmit="return confirm('Are you sure you want to remove the good designation of this video?');" title="This video isn't good (return to staging)" name="verdict" value="demote">
+				{% elif queue == 'bad' %}
+					<input type="submit" title="Send this video back to to be judged" name="verdict" value="forgive">
+					<input type="submit" onsubmit="return confirm('Are you sure you want to report and delete this video?');" title="Nobody should ever see this video ever again (blight)" name="verdict" value="report">
 				{% endif %}
-		{% with messages = get_flashed_messages() %}
-			{% if messages %}
-				{% for message in messages %}
-					<li>{{ message }}</li>
-				{% endfor %}
 			{% endif %}
-		{% endwith %}
+			<ul>
+			{% if count %}
+				<li>
+				{{ count }} {{ queue }} videos
+				</li>
+			{% endif %}
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
 			</ul>
-			</div>
 		</form>
+		{% endif %}
 		<script>
 <!-- rip your privacies -->
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
