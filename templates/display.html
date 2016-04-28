@@ -1,21 +1,73 @@
 <!DOCTYPE html>
 <html> <head>
 		<title>webm website</title>
+		<meta name="robots" content="noindex, nofollow">
 		<style>
-/**
+/**             "unsure"
+[entry]         +----+                                    non-actions that store
+   |            |    v                     "demote"       a log for future audit
+   +------->  website.webm  <-----------------------+
+              ^  ^   |                              |        +-> "affirm" --+
+              |  |   |               +--+ "nsfw"    |        |-> "censure" -+
+ +------------+  |   | "good"        |  v           | "best" |              v
+ |               |   +---------> good.webm.website -------> best.webm.website
+ |               |   |                   ^     ^    |
+ |    20% chance |   | "bad"             |     +----+
+ |    of placebo |   |                   | "unsure" |  "keep" / "hold"
+ |               +---+                   |          v
+ |                   |                   |     withheld until
+ |                   | 80% chance        +---- good queue is
+ |                   v                         empty
+ | "forgive"
+ +----------- bad.webm.website           vetoed (nsfw) items cannot be promoted
+                     |                           any further than "good"
+webm withheld  <-----+  "report"
+indefinitely                       censured videos go on your personal blacklist
 
-  webm.website  <------+
-    ^   |              | forgive
-    |   | bad          |              report
-    |   +------> bad.webm.website ----------->  (webm deleted)
-    |   |
-    |   | good                        promote
-    |   +------> good.webm.website ---------->  best.webm.website
-    |                  |
-    |           demote |       'kept' webms will not display until
-    +------------------+       all other webms are similarly kept
 
-**/
+	RECENT CHANGELOG:
+
+	2016-04-27 - Moved history to top right corner of screen
+
+	2016-04-26 - best.webm.website censors censured webms
+		       - top.webm.website is now the old best.webm.website
+
+	2016-04-24 - Cleared entire report queue due to new NSFW functionality via "good"
+	           - Deleted duplicates across the board without replacement
+			       (so 'good' and 'best' took some hits)
+
+	PRIVACY POLICY:
+		- Your IP address might be logged
+		- Your actions definitely are
+		- Either might be disclosed without warning
+
+	ABUSE POLICY:
+		- webms are pulled from another social media website without vetting
+		- if you see something terrible, hit "report" where possible,
+			which will instantly render the webm inaccessible
+		- report flagrant abuse to abuse@fluv.net
+
+	DEVELOPMENT:
+		- Patches and issues welcome: https://github.com/zuzak/yakc
+
+		Copyright (c) 2016, Douglas Gardner <douglas@chippy.ch>
+
+		Permission to use, copy, modify, and/or distribute this software for any
+		purpose with or without fee is hereby granted, provided that the above
+		copyright notice and this permission notice appear in all copies.
+
+		THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+		REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+		FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+		INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+		LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+		OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+		PERFORMANCE OF THIS SOFTWARE.
+
+		A product of the Zuzakistan Common Agricultural Policy
+
+			**/
+		*{ font-size: 16px }
 			body {
 				background-color: #222;
 				height: 100%;
@@ -26,9 +78,15 @@
 				width: 100%;
 				text-align:center;
 				font-family:monospace;
+				font-size:16px;
+				/* disable this for centred, but actual size videos
+                   enable for full-screen but not-vcentred videos:  */
+				/*display: flex;*/
+				align-items: center;
+				justify-content: center;
 			}
 			.good { background-color: #252 }
-			.best { background-color: #552 }
+			.best { background-color: #5D4C1B; /* #552 */ }
 			.bad { background-color: #522 }
 			.ugly { background-color: #225 }
 			video {
@@ -56,9 +114,51 @@
 				left: 1em;
 				top: 1em;
 			}
+			.best form {
+				left: 1em;
+				top: auto;
+				bottom: 1em;
+			}
+			li.stats {
+				padding: 0;
+					height: 1em;
+			}
+			.stat {
+				margin:0;
+				padding:0;
+					height: 1em;
+				display: inline-block;
+				float: left;
+			}
+			.stat.good {
+				border-top-left-radius: 0px;
+				border-bottom-left-radius: 0px;
+			}
+
+			.debug {
+				background-color: #777;
+				border-radius: 0.5em;
+				color: #777; /* TODO */
+				font-size: 0.5em;
+				height: 1em;
+				overflow: hidden;
+				padding: 0.5em;
+				position: fixed;
+				right: 0.5em;
+				text-align: left;
+				top: 0;
+				width: 1em;
+				z-index: 20;
+			}
+			.debug:hover {
+								color: #333;
+				height: auto;
+					width: auto;
+			}
 		</style>
 	</head>
 	<body class="{{ queue }}">
+
 		<a href="/{{webm}}">
 		<video autoplay controls loop>
 			<source src="/{{ webm }}">
@@ -71,15 +171,51 @@
 				<input type="hidden" name="webm" value="{{ webm }}">
 
 				{% if not queue %}
-					<input type="submit" title="I like this video (wheat)" name="verdict" value="good">
-					<input type="submit" title="I don't like this video (chaff)" name="verdict" value="bad">
+					{% if unpromotable %}
+					<input class="left" type="submit" title="[cannot promote: {{ unpromotable }}]" name="verdict" value="good" disabled>
+					<input type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure">
+					<input class="right" type="submit" title="[cannot demote: {{ unpromotable }}]" name="verdict" value="bad" disabled>
+					{% else %}
+					<input class="left" type="submit" title="I like this video (wheat)" name="verdict" value="good">
+					<input type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure">
+					<input class="right" type="submit" title="I don't like this video (chaff)" name="verdict" value="bad">
+					{% endif %}
 				{% elif queue == 'good' %}
-					<input type="submit" onsubmit="return confirm('Feature this webm?');" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="promote">
-					<input type="submit" title="This is the right place for this video (enact hold)" name="verdict" value="keep">
-					<input type="submit" onsubmit="return confirm('Are you sure you want to remove the good designation of this video?');" title="This video isn't good (return to staging)" name="verdict" value="demote">
+					<div>
+					{% if unpromotable %}
+						<input class="left" type="submit" title="[cannot promote: {{ unpromotable }}]" name="verdict" value="promote" disabled>
+						<input type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="nsfw" disabled>
+						<input class="right" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="veto" disabled>
+					{% else %}
+						<input class="left" type="submit" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="promote">
+						<input type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="nsfw">
+						<input class="right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto">
+					{% endif %}
+					</div>
+						{% if unpromotable == 'cannot promote own videos' %}
+							<input type="submit" title="[cannot hold: you promoted this video]" name="verdict" value="hold" disabled>
+						{% elif unpromotable == 'you demoted this before!'  %}
+							<input type="submit" title="[cannot hold: you tried to demote this video]" name="verdict" value="hold" disabled>
+						{% else %}
+							<input type="submit" title="This is the right place for this video (enact hold)" name="verdict" value="hold">
+						{% endif %}
+						<input type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure">
+					{% if unpromotable == 'you demoted this before!' or unpromotable == 'already promoted' %}
+						<input type="submit" title="[cannot demote: {{ unpromotable }}]" name="verdict" value="demote" disabled>
+					{% else %}
+						<input type="submit" title="This video isn't good (return to staging)" name="verdict" value="demote">
+					{% endif %}
 				{% elif queue == 'bad' %}
 					<input type="submit" title="Send this video back to to be judged" name="verdict" value="forgive">
 					<input type="submit" onsubmit="return confirm('Are you sure you want to report and delete this video?');" title="Nobody should ever see this video ever again (blight)" name="verdict" value="report">
+				{% elif queue == 'best' %}
+					{% if unpromotable %}
+					<input type="submit" title="[cannot affirm: {{unpromotable}}]" name="verdict" value="affirm" disabled>
+					<input type="submit" title="[cannot censure: {{unpromotable}}]" name="verdict" value="censure" disabled>
+					{% else %}
+					<input type="submit" title="This is a good video (upvote)" name="verdict" value="affirm">
+					<input type="submit" title="This video doesn't deserve to be here (downvote)" name="verdict" value="censure">
+					{% endif %}
 				{% endif %}
 			{% endif %}
 			<ul>
@@ -95,9 +231,26 @@
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
+			{% if held %}
+				<li> {{held}} held videos </li>
+			{% endif %}
+			{% if stats %}
+				<li class="stats ugly">
+					<span title="{{ stats.bad }} bad videos" style="width:{{ 100*(stats.bad / stats.total)}}%" class="stat bad">&nbsp;</span>
+					<span title="{{ stats.good }} good videos" style="width:{{ 100*(stats.good / stats.total)}}%" class="stat good">&nbsp;</span>
+					<span title="{{ stats.best }} best videos" style="width:{{ 100*(stats.best / stats.total)}}%" class="stat best">&nbsp;</span>
+					<span title="{{ stats.trash }} reported videos" style="width:{{ 100*(stats.trash / stats.total)}}%" class="stat bad">&nbsp;</span>
+					<span title="{{ stats.pending }} pending videos" style="width:{{ 100*(stats.pending / stats.total)-1}}%" class="stat ugly">&nbsp;</span>
+					<!-- {{ stats.good }} -->
+					<span style="clear:both"></span>
+				</li>
+				{% endif %}
 			</ul>
 		</form>
 		{% endif %}
+{% if debug %}
+<pre class="debug">{{debug}}</pre>
+{% endif %}
 		<script>
 <!-- rip your privacies -->
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
