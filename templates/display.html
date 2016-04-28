@@ -11,9 +11,9 @@
               |  |   |               +--+ "nsfw"    |        |-> "censure" -+
  +------------+  |   | "good"        |  v           | "best" |              v
  |               |   +---------> good.webm.website -------> best.webm.website
- |               |   |                   ^     ^    |
- |    20% chance |   | "bad"             |     +----+
- |    of placebo |   |                   | "unsure" |  "keep" / "hold"
+ |               |   |                   ^          |
+ |    20% chance |   | "bad"             |          |
+ |    of placebo |   |                   |          |  "keep" / "hold"
  |               +---+                   |          v
  |                   |                   |     withheld until
  |                   | 80% chance        +---- good queue is
@@ -199,7 +199,7 @@ indefinitely                       censured videos go on your personal blacklist
 						{% else %}
 							<input type="submit" title="This is the right place for this video (enact hold)" name="verdict" value="hold">
 						{% endif %}
-						<input type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure">
+						<!-- <input type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure"> -->
 					{% if unpromotable == 'you demoted this before!' or unpromotable == 'already featured' %}
 						<input type="submit" title="[cannot demote: {{ unpromotable }}]" name="verdict" value="demote" disabled>
 					{% else %}
