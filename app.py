@@ -3,6 +3,7 @@ from flask import (Flask, send_from_directory, abort,
 from random import choice, random
 from uuid import uuid4
 import json
+import logging
 from hashlib import sha256
 import shutil
 import socket
@@ -429,5 +430,8 @@ if __name__ == '__main__':
         SECRET_KEY=uuid4().hex,
         SERVER_NAME='webm.website'
     )
+
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
 
     app.run(host='0.0.0.0', port=3000)
