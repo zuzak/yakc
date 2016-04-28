@@ -193,7 +193,7 @@ indefinitely                       censured videos go on your personal blacklist
 					{% endif %}
 					</div>
 						{% if unpromotable == 'cannot feature own videos' %}
-							<input type="submit" title="[cannot hold: you featured this video]" name="verdict" value="hold" disabled>
+						<input type="submit" title="[cannot hold: {{ unpromotable }}]" name="verdict" value="hold" disabled>
 						{% elif unpromotable == 'you demoted this before!'  %}
 							<input type="submit" title="[cannot hold: you tried to demote this video]" name="verdict" value="hold" disabled>
 						{% else %}
