@@ -59,6 +59,8 @@ def is_unpromotable(webm):
     user = map_ips(user, user)
     if user == '(central)':
         return 'this shared IP address is banned'
+    if user.startswith('94.119'):
+        return 'this shared IP address is banned'
     log = get_log(webm)
     if log is not None:
         log = log.split('\n')
