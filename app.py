@@ -51,7 +51,7 @@ def get_user_censured(webm):
 
 def is_unpromotable(webm):
     if webm in get_best_webms():
-        return 'already promoted'
+        return 'already featured'
     if webm in get_vetoed_webms():
         return 'this video has been vetoed'
     user = get_ip()
@@ -64,7 +64,7 @@ def is_unpromotable(webm):
         for line in log:
             if user in line:
                 if 'marked good' in line:
-                    return 'cannot promote own videos'
+                    return 'cannot feature own videos'
                 if 'demoted' in line:
                     return 'you demoted this before!'
     return False
@@ -79,7 +79,7 @@ def is_votable(webm):
         for line in log:
             if user in line:
                 if 'marked good' in line:
-                    return 'cannot promote own videos'
+                    return 'cannot feature own videos'
                 if 'demoted' in line:
                     return 'you demoted this before!'
                 if 'censure' in line:
@@ -359,15 +359,15 @@ def moderate_webm(domain=None):
                 return redirect('/', 303)
             else:
                 abort(400, 'can only demote good webms')
-        elif verdict == 'promote':
+        elif verdict == 'feature':
             if is_unpromotable(webm):
-                abort(400, 'not allowed to promote')
+                abort(400, 'not allowed to feature')
             if webm in get_good_webms():
                 mark_best(webm)
                 flash('Promoted ' + webm)
                 return redirect('/', 303)
             else:
-                abort(400, 'can only promote good webms')
+                abort(400, 'can only feature good webms')
         elif verdict == 'forgive':
             if webm in get_bad_webms():
                 unmark_bad(webm)
