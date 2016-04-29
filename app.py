@@ -310,7 +310,7 @@ def mark_bad(webm):
 
 def mark_ugly(webm):
     global delta;
-    delta -= 1
+    delta -= 5
     add_log(webm, 'reported')
     os.symlink('webms/all/' + webm, 'webms/trash/' + webm)
 
@@ -341,7 +341,7 @@ def unmark_bad(webm):
 
 def mark_best(webm):
     global delta;
-    delta += 1
+    delta += 5
     add_log(webm, 'featured ****')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto('http://best.webm.website/' + webm + ' has been marked as "best" by ' + map_ips(get_ip(), get_ip()), (
