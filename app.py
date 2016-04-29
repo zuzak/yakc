@@ -260,7 +260,7 @@ def serve_best():
     if get_user_censured(webm):
         return redirect('/', 302)
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='best', token=token, debug=get_log(webm), unpromotable=is_votable(webm))
+    return render_template('display.html', webm=webm, queue='best', token=token, unpromotable=is_votable(webm))
 
 
 @app.route('/', subdomain='top')
