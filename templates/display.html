@@ -221,7 +221,8 @@ indefinitely                       censured videos go on your personal blacklist
 			<ul>
 			{% if count %}
 				<li>
-				{{ count }} {{ queue }} videos
+					{{ count }} {{ queue }} videos
+					{% if delta %} &Delta;{{delta}} {% endif %}
 				</li>
 			{% endif %}
 			{% with messages = get_flashed_messages() %}

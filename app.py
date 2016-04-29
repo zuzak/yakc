@@ -16,6 +16,8 @@ app = Flask(__name__)
 sentry = Sentry(app)
 
 
+delta = 0
+
 def map_ips(ip, default):
     with open('addresses.json') as fp:
         addrs = json.load(fp)
@@ -27,12 +29,13 @@ def get_ip():
 
 
 def add_log(webm, action):
+    global delta
     ip = get_ip()
     ip = map_ips(ip, ip)
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     with open('webms/metadata/' + webm, 'a') as logfile:
         logfile.write(string + '\n')
-    print(string + ' ' + webm)
+    print(str(delta) + ' ' + string + ' ' + webm)
 
 
 def get_user_censured(webm):
@@ -230,6 +233,7 @@ def serve_random():
 
 @app.route('/', subdomain='good')
 def serve_good():
+    global delta
     best = None
     held = 0
     try:
@@ -244,7 +248,7 @@ def serve_good():
             best = True
     except IndexError:
         abort(404)
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), debug=get_log(webm))
+    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), debug=get_log(webm), delta=str(delta))
 
 
 @app.route('/', subdomain='best')
@@ -286,21 +290,27 @@ def serve_bad():
 
 
 def mark_good(webm):
+    global delta;
     add_log(webm, 'marked good')
+    delta += 1
     os.symlink('webms/all/' + webm, 'webms/good/' + webm)
 
 
 def mark_bad(webm):
+    global delta;
     if random() > 0.8:
         # For a small percentage of "bad" moves, don't actually do it
         # That way, some webms get a second chance
         add_log(webm, 'marked bad (placebo)')
     else:
+        delta -= 1
         add_log(webm, 'marked bad')
         os.symlink('webms/all/' + webm, 'webms/bad/' + webm)
 
 
 def mark_ugly(webm):
+    global delta;
+    delta -= 1
     add_log(webm, 'reported')
     os.symlink('webms/all/' + webm, 'webms/trash/' + webm)
 
@@ -316,16 +326,22 @@ def mark_hold(webm):
 
 
 def unmark_good(webm):
+    global delta;
+    delta -= 1
     add_log(webm, 'demoted')
     os.unlink('webms/good/' + webm)
 
 
 def unmark_bad(webm):
+    global delta;
+    delta += 1
     add_log(webm, 'forgiven')
     os.unlink('webms/bad/' + webm)
 
 
 def mark_best(webm):
+    global delta;
+    delta += 1
     add_log(webm, 'featured ****')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto('http://best.webm.website/' + webm + ' has been marked as "best" by ' + map_ips(get_ip(), get_ip()), (
@@ -344,8 +360,6 @@ def moderate_webm(domain=None):
         abort(400, 'token mismatch')
 
     verdict = request.form['verdict']
-    if get_ip() == 'barry':  # shadowban
-        return add_log(webm, verdict + ' (ignored)')
 
     status = None
     try:
@@ -434,6 +448,6 @@ if __name__ == '__main__':
     )
 
     log = logging.getLogger('werkzeug')
-    log.setLevel(logging.ERROR)
+    log.setLevel(logging.WARNING)
 
     app.run(host='0.0.0.0', port=3000)
