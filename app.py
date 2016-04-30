@@ -292,7 +292,7 @@ def serve_music():
     except IndexError:
         abort(404, 'You need to shunt some videos!')
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='music', debug=get_log(webm), count=len(webms))
+    return render_template('display.html', webm=webm, queue='music', token=token, debug=get_log(webm), count=len(webms))
 
 @app.route('/', subdomain='index')
 def serve_best_index():
@@ -366,6 +366,12 @@ def mark_music(webm):
     os.symlink('webms/all/' + webm, 'webms/music/' + webm)
     add_log(webm, 'shunted')
 
+def unmark_music(webm):
+    global delta
+    delta -= 3
+    os.unlink('webms/music/' + webm)
+    os.symlink('webms/all/' + webm, 'webms/good/' + webm)
+    add_log(webm, 'unshunted')
 
 def mark_best(webm):
     global delta;
@@ -396,7 +402,15 @@ def moderate_webm(domain=None):
         elif verdict == 'bad':
             status = mark_bad(webm)
         elif verdict == 'shunt':
-            status = mark_music(webm)
+            if webm in get_good_webms():
+                status = mark_music(webm)
+            else:
+                abort(400, 'can only shunt good webms')
+        elif verdict == 'unshunt':
+            if webm in get_music_webms():
+                status = unmark_music(webm)
+            else:
+                abort(400, 'can only unshunt if shunted!')
         elif verdict == 'report':
             status = mark_ugly(webm)
         elif verdict == 'demote':
