@@ -160,7 +160,7 @@ indefinitely                       censured videos go on your personal blacklist
 			}
 			*/
 
-			.debug {
+			.debug, .github {
 				background-color: #777;
 				border-radius: 0.5em;
 				color: #777; /* TODO */
@@ -174,6 +174,11 @@ indefinitely                       censured videos go on your personal blacklist
 				top: 0;
 				width: 1em;
 				z-index: 20;
+			}
+			.github {
+				background-color: #999;
+				top: 3.5em;
+				z-index: 15;
 			}
 			.debug:hover {
 								color: #333;
@@ -191,7 +196,7 @@ indefinitely                       censured videos go on your personal blacklist
 				right: 2em;
 				text-align: left;
 				bottom: 2em;
-				z-index: 20;
+				z-index: 10;
 			}
 
 			input {
@@ -303,6 +308,7 @@ indefinitely                       censured videos go on your personal blacklist
 {% if debug %}
 <pre class="debug">{{debug}}</pre>
 {% endif %}
+<a class="github" title="View source" href="https://github.com/zuzak/yakc"></a>
 		<script>
 <!-- rip your privacies -->
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
