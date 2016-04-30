@@ -214,7 +214,7 @@ indefinitely                       censured videos go on your personal blacklist
 		<!-- <div class="news"></div> -->
 
 		<a href="/{{webm}}">
-		<video autoplay controls loop>
+		<video id="js-video" autoplay controls loop>
 			<source src="/{{ webm }}">
 		</video>
 		</a>
@@ -242,15 +242,15 @@ indefinitely                       censured videos go on your personal blacklist
 						<input class="best left" type="submit" title="[cannot feature: {{ unpromotable }}]" name="verdict" value="feature" disabled>
 						<input class="good" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="nsfw" disabled>
 						{% if unpromotable == 'this video has been vetoed' or unpromotable == 'cannot feature own videos' %}
-							<input class="music" type="submit" title="Mark as good music (shunt)" name="verdict" value="shunt">
+							<input class="music" id="js-shunt" type="submit" title="Mark as good music (shunt)" name="verdict" value="shunt">
 						{% else %}
-							<input class="music" type="submit" title="[cannot shunt: {{ unpromotable }}]" name="verdict" value="shunt" disabled>
+							<input class="music" id="js-shunt" type="submit" title="[cannot shunt: {{ unpromotable }}]" name="verdict" value="shunt" disabled>
 						{% endif %}
 						<input class="ugly right" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="veto" disabled>
 					{% else %}
 						<input class="best left" type="submit" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="feature">
 						<input class="good" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="nsfw">
-						<input class="music" type="submit" title="Mark as good music (shunt)" name="verdict" value="shunt">
+						<input class="music" type="submit" id="js-shunt" title="Mark as good music (shunt!)" name="verdict" value="shunt">
 						<input class="good right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto">
 					{% endif %}
 					</div>
@@ -328,5 +328,20 @@ indefinitely                       censured videos go on your personal blacklist
     ga('send', 'pageview');
 
 		</script>
+		{% if queue == 'good' %}
+		<script>
+			document.getElementById( "js-video" ).addEventListener( "loadeddata", function () {
+				if ( typeof ( this.mozHasAudio !== "undefined" ) && this.mozHasAudio === false) {
+					document.getElementById("js-shunt").disabled = true;
+					document.getElementById("js-shunt").title = "[cannot shunt: no audio]"
+				} else if ( typeof ( this.webkitAudioDecodedByteCount !== "undefined" ) && this.webkitAudioDecodedByteCount === 0 ) {
+					document.getElementById("js-shunt").disabled = true;
+					document.getElementById("js-shunt").title = "[cannot shunt: no audio]"
+				} else {
+					// document.getElementById("js-shunt").disabled = false;
+				}
+			} );
+		</script>
+		{% endif %}
 	</body>
 </html>
