@@ -212,6 +212,8 @@ def show_webm(name, domain=None):
             abort(403)
     if name in get_best_webms():
         queue = 'best'
+    elif name in get_music_webms():
+        queue = 'music'
     elif name in get_good_webms():
         queue = 'good'
     elif name in get_bad_webms():
