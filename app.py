@@ -250,6 +250,15 @@ def serve_good():
         abort(404)
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), debug=get_log(webm), delta=str(delta))
 
+@app.route('/', subdomain='decent')
+def serve_all_good():
+    try:
+        good = get_held_webms()
+        webm = choice(good)
+    except IndexError:
+        abort(404)
+    return render_template('display.html', webm=webm, queue='good', stats=get_stats())
+
 
 @app.route('/', subdomain='best')
 def serve_best():
