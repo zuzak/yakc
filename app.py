@@ -124,6 +124,9 @@ def get_all_webms():
 def get_good_webms():
     return os.listdir('webms/good')
 
+def get_music_webms():
+    return os.listdir('webms/music')
+
 
 def get_best_webms():
     return os.listdir('webms/best')
@@ -257,7 +260,7 @@ def serve_all_good():
         webm = choice(good)
     except IndexError:
         abort(404)
-    return render_template('display.html', webm=webm, queue='good', stats=get_stats())
+    return render_template('display.html', webm=webm, queue='good', stats=get_stats(), debug=get_log(webm))
 
 
 @app.route('/', subdomain='best')
@@ -281,6 +284,14 @@ def serve_best_nocensor():
     token = generate_webm_token(webm)
     return render_template('display.html', webm=webm, queue='best', token=token, debug=get_log(webm), unpromotable=is_votable(webm))
 
+@app.route('/', subdomain='music')
+def serve_music():
+    try:
+        webm = choice(get_music_webms())
+    except IndexError:
+        abort(404)
+    token = generate_webm_token(webm)
+    return render_template('display.html', webm=webm, queue='music', debug=get_log(webm))
 
 @app.route('/', subdomain='index')
 def serve_best_index():
@@ -347,6 +358,13 @@ def unmark_bad(webm):
     add_log(webm, 'forgiven')
     os.unlink('webms/bad/' + webm)
 
+def mark_music(webm):
+    global delta
+    delta += 3
+    os.unlink('webms/good/' + webm)
+    os.symlink('webms/all/' + webm, 'webms/music/' + webm)
+    add_log(webm, 'shunted')
+
 
 def mark_best(webm):
     global delta;
@@ -376,6 +394,8 @@ def moderate_webm(domain=None):
             status = mark_good(webm)
         elif verdict == 'bad':
             status = mark_bad(webm)
+        elif verdict == 'shunt':
+            status = mark_music(webm)
         elif verdict == 'report':
             status = mark_ugly(webm)
         elif verdict == 'demote':
@@ -444,7 +464,8 @@ if __name__ == '__main__':
         'webms/best',
         'webms/good2',
         'webms/metadata',
-        'webms/veto'
+        'webms/veto',
+        'webms/music'
     ]
     for directory in required_dirs:
         if not os.path.exists(directory):

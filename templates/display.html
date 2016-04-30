@@ -11,13 +11,13 @@
               |  |   |               +--+ "nsfw"    |        |-> "censure" -+
  +------------+  |   | "good"        |  v           | "best" |              v
  |               |   +---------> good.webm.website -------> best.webm.website
- |               |   |                   ^          |
- |    20% chance |   | "bad"             |          |
- |    of placebo |   |                   |          |  "keep" / "hold"
- |               +---+                   |          v
- |                   |                   +---- decent.webm.website
- |                   | 80% chance    empties
- |                   v          when "good" is empty
+ |               |   |             |     ^          |
+ |    20% chance |   | "bad"       |     | after    |
+ |    of placebo |   |             |     | good     |  "keep" / "hold"
+ |               +---+             |     | empties  v
+ |                   |             |     +---- decent.webm.website
+ |                   | 80% chance  |shunt
+ |                   v             +-----> music.webm.website
  | "forgive"
  +----------- bad.webm.website           vetoed (nsfw) items cannot be featured
                      |                           any further than "good"
@@ -99,7 +99,11 @@ indefinitely                       censured videos go on your personal blacklist
 			}
 			.bad {
 				background-color: #da2055;
-				border-color: #da2055; /* complim. of good */ }
+				border-color: #da2055; /* complim. of good */
+			}
+			.music {
+				background-color: #1e90ff;
+				border-color: #1e90ff;
 			}
 			video {
 				max-height: 100%;
@@ -210,10 +214,12 @@ indefinitely                       censured videos go on your personal blacklist
 					{% if unpromotable %}
 						<input class="best left" type="submit" title="[cannot feature: {{ unpromotable }}]" name="verdict" value="feature" disabled>
 						<input class="good" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="nsfw" disabled>
+						<input class="music" type="submit" title="[cannot shunt: {{ unpromotable }}]" name="verdict" value="shunt" disabled>
 						<input class="ugly right" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="veto" disabled>
 					{% else %}
 						<input class="best left" type="submit" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="feature">
 						<input class="good" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="nsfw">
+						<input class="music" type="submit" title="Mark as good music (shunt)" name="verdict" value="shunt">
 						<input class="good right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto">
 					{% endif %}
 					</div>
