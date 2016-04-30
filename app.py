@@ -35,7 +35,7 @@ def add_log(webm, action):
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     with open('webms/metadata/' + webm, 'a') as logfile:
         logfile.write(string + '\n')
-    print(str(delta) + ' ' + string + ' ' + webm)
+    print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
 def get_user_censured(webm):
