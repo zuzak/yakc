@@ -188,7 +188,7 @@ def serve_webm(name, domain=None):
         return redirect(name)
     name = name + '.webm'
     if name not in get_all_webms():
-        abort(404)
+        abort(404, 'Cannot find that webm!')
 
     if name in get_trash_webms():
         if name not in get_quality_webms():
@@ -250,7 +250,7 @@ def serve_good():
         if webm in get_best_webms():
             best = True
     except IndexError:
-        abort(404)
+        abort(404, 'You need to promote some webms!')
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), debug=get_log(webm), delta=str(delta))
 
 @app.route('/', subdomain='decent')
@@ -259,7 +259,7 @@ def serve_all_good():
         good = get_held_webms()
         webm = choice(good)
     except IndexError:
-        abort(404)
+        abort(404, 'There are no held webms.')
     return render_template('display.html', webm=webm, queue='good', stats=get_stats(), debug=get_log(webm))
 
 
@@ -268,7 +268,7 @@ def serve_best():
     try:
         webm = choice(get_best_webms())
     except IndexError:
-        abort(404)
+        abort(404, 'You need to feature some webms!')
     if get_user_censured(webm):
         return redirect('/', 302)
     token = generate_webm_token(webm)
@@ -280,7 +280,7 @@ def serve_best_nocensor():
     try:
         webm = choice(get_best_webms())
     except IndexError:
-        abort(404)
+        abort(404, 'There are no featured webms.')
     token = generate_webm_token(webm)
     return render_template('display.html', webm=webm, queue='best', token=token, debug=get_log(webm), unpromotable=is_votable(webm))
 
@@ -290,7 +290,7 @@ def serve_music():
         webms = get_music_webms()
         webm = choice(webms)
     except IndexError:
-        abort(404)
+        abort(404, 'You need to shunt some videos!')
     token = generate_webm_token(webm)
     return render_template('display.html', webm=webm, queue='music', debug=get_log(webm), count=len(webms))
 
@@ -306,7 +306,7 @@ def serve_bad():
         webms = get_bad_webms()
         webm = choice(webms)
     except IndexError:
-        abort(404)
+        abort(404, 'No webms have been marked bad.')
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='bad', count=len(webms), stats=get_stats())
 
 
