@@ -458,7 +458,7 @@ def moderate_webm(domain=None):
 if __name__ == '__main__':
 
     required_dirs = [
-        'webms'
+        'webms',
         'webms/good',
         'webms/bad',
         'webms/trash',
