@@ -181,12 +181,26 @@ indefinitely                       censured videos go on your personal blacklist
 					width: auto;
 			}
 
+			.news {
+				background-color: #777;
+				border-radius: 0.5em;
+				font-size: 0.7em;
+				overflow: hidden;
+				padding: 0.5em;
+				position: fixed;
+				right: 2em;
+				text-align: left;
+				bottom: 2em;
+				z-index: 20;
+			}
+
 			input {
 				margin: 5px;
 			}
 		</style>
 	</head>
 	<body class="{{ queue }}">
+		<!-- <div class="news"></div> -->
 
 		<a href="/{{webm}}">
 		<video autoplay controls loop>
