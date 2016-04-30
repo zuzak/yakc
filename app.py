@@ -287,11 +287,12 @@ def serve_best_nocensor():
 @app.route('/', subdomain='music')
 def serve_music():
     try:
-        webm = choice(get_music_webms())
+        webms = get_music_webms()
+        webm = choice(webms)
     except IndexError:
         abort(404)
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='music', debug=get_log(webm))
+    return render_template('display.html', webm=webm, queue='music', debug=get_log(webm), count=len(webms))
 
 @app.route('/', subdomain='index')
 def serve_best_index():
