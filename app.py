@@ -476,14 +476,15 @@ if __name__ == '__main__':
 
     required_dirs = [
         'webms',
-        'webms/good',
+        'webms/all',
         'webms/bad',
-        'webms/trash',
         'webms/best',
+        'webms/good',
         'webms/good2',
         'webms/metadata',
-        'webms/veto',
         'webms/music'
+        'webms/trash',
+        'webms/veto',
     ]
     for directory in required_dirs:
         if not os.path.exists(directory):
