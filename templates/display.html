@@ -140,31 +140,19 @@ indefinitely                       censured videos go on your personal blacklist
 				bottom: 1em;
 			}
 			li.stats {
-				min-width:10em;
-				border: none;
-					background-color: transparent;
+				padding: 0;
+					background-color: magenta;
+						overflow-x:hidden;
+							overflow-y: hidden;
+								white-space: nowrap;
+									text-align:left;
 			}
 			.stat {
 				margin:0;
 				padding:0;
-					height: 1em;
 				display: inline-block;
-					border-top: 1px solid #333;
-						border-bottom: 1px solid #333;
-				float: left;
+					text-decoration: none;
 			}
-			/*
-			.stat.bad {
-				border-top-left-radius: 4px;
-				border-bottom-left-radius: 4px;
-			}
-			.stat.ugly {
-				border-top-right-radius: 4px;
-				border-bottom-right-radius: 4px;
-
-			}
-			*/
-
 			.debug, .github, .history {
 				background-color: #777;
 				border-radius: 0.5em;
@@ -213,6 +201,7 @@ indefinitely                       censured videos go on your personal blacklist
 			input {
 				margin: 5px;
 			}
+			.clear{clear:both;}
 		</style>
 	</head>
 	<body class="{{ queue }}">
@@ -251,12 +240,12 @@ indefinitely                       censured videos go on your personal blacklist
 						{% else %}
 							<input class="music" id="js-shunt" type="submit" title="[cannot shunt: {{ unpromotable }}]" name="verdict" value="shunt" disabled>
 						{% endif %}
-						<input class="ugly right" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="veto" disabled>
+						<!-- <input class="good right" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="veto" disabled> -->
 					{% else %}
 						<input class="best left" type="submit" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="feature">
 						<input class="good" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="nsfw">
 						<input class="music" type="submit" id="js-shunt" title="Mark as good music (shunt!)" name="verdict" value="shunt">
-						<input class="good right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto">
+						<!-- <input class="good right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto"> -->
 					{% endif %}
 					</div>
 						{% if unpromotable == 'cannot feature own videos' %}
@@ -302,20 +291,21 @@ indefinitely                       censured videos go on your personal blacklist
 				<li> {{held}} held videos </li>
 			{% endif %}
 			{% if stats %}
-				<li class="stats ugly">
-					<a title="{{ stats.bad }} bad videos" style="width:{{ 100*(stats.bad / stats.total)}}%" class="stat bad" href="//bad.webm.website">&nbsp;</a>
+				<li class="stats">
+					<!-- need the comments here because otherwise the newlines actually get displayed -->
+					<a title="{{ stats.bad }} bad videos" style="width:{{ 100*(stats.bad / stats.total)}}%" class="stat bad" href="//bad.webm.website">&nbsp;</a><!--
 					{% if held %}
-					<a title="{{ count }} good videos" style="width:{{ 100*(count) / stats.total}}%" class="stat good" href="//good.webm.website">&nbsp;</a>
-					<a title="{{ held }} held videos" style="width:{{ 100*(held / stats.total)}}%" class="stat held" href="//decent.webm.website">&nbsp;</a>
+					--><a title="{{ count }} good videos" style="width:{{ 100*(count) / stats.total}}%" class="stat good" href="//good.webm.website">&nbsp;</a><!--
+					--><a title="{{ held }} held videos" style="width:{{ 100*(held / stats.total)}}%" class="stat held" href="//decent.webm.website">&nbsp;</a><!--
 					{% else %}
-					<a title="{{ stats.good}} good videos" style="width:{{ 100*(stats.good / stats.total)-1}}%" class="stat good" href="//good.webm.website">&nbsp;</a>
+					--><a title="{{ stats.good}} good videos" style="width:{{ 100*(stats.good / stats.total)-1}}%" class="stat good" href="//good.webm.website">&nbsp;</a><!--
 					{% endif %}
-					<a title="{{ stats.best }} best videos" style="width:{{ 100*(stats.best / stats.total)}}%" class="stat best" href="//best.webm.website">&nbsp;</a>
-					<a title="{{ stats.music }} best videos" style="width:{{ 100*(stats.music / stats.total)}}%" class="stat music" href="//music.webm.website">&nbsp;</a>
-					<a title="{{ stats.trash }} reported videos" style="width:{{ 100*(stats.trash / stats.total)}}%" class="stat bad">&nbsp;</a>
-					<a title="{{ stats.pending }} pending videos" style="width:{{ 100*(stats.pending / stats.total)-2}}%" class="stat ugly" href="//webm.website">&nbsp;</a>
+					--><a title="{{ stats.best }} best videos" style="width:{{ 100*(stats.best / stats.total)}}%" class="stat best" href="//best.webm.website">&nbsp;</a><!--
+					--><a title="{{ stats.music }} best videos" style="width:{{ 100*(stats.music / stats.total)}}%" class="stat music" href="//music.webm.website">&nbsp;</a><!--
+					--><a title="{{ stats.trash }} reported videos" style="width:{{ 100*(stats.trash / stats.total)}}%" class="stat bad">&nbsp;</a><!--
+					--><a title="{{ stats.pending }} pending videos" style="width:{{ 100*(stats.pending / stats.total)-2}}%" class="stat ugly" href="//webm.website">&nbsp;</a>
 					<!-- {{ stats.good }} -->
-					<span style="clear:both"></span>
+					<div class="clear" />
 				</li>
 				{% endif %}
 			</ul>
