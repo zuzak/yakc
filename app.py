@@ -157,7 +157,7 @@ def get_trash_webms():
     return os.listdir('webms/trash')
 
 
-def get_held_webms(): return os.listdir('webms/good2')
+def get_held_webms(): return os.listdir('webms/held')
 
 
 def get_unheld_good_webms():
@@ -179,8 +179,8 @@ def get_stats():
 
 
 def delete_holding_queue():
-    shutil.rmtree('webms/good2')
-    os.makedirs('webms/good2')
+    shutil.rmtree('webms/held')
+    os.makedirs('webms/held')
 
 
 @app.route('/<name>.webm', subdomain='<domain>')
@@ -347,7 +347,7 @@ def mark_veto(webm):
 
 def mark_hold(webm):
     add_log(webm, 'held')
-    os.symlink('webms/all/' + webm, 'webms/good2/' + webm)
+    os.symlink('webms/all/' + webm, 'webms/held/' + webm)
 
 
 def unmark_good(webm):
@@ -481,7 +481,7 @@ if __name__ == '__main__':
         'webms/bad',
         'webms/best',
         'webms/good',
-        'webms/good2',
+        'webms/held',
         'webms/metadata',
         'webms/music'
         'webms/trash',
