@@ -169,6 +169,7 @@ def get_stats():
     return {
         'good': (len(get_good_webms()) - best),
         'bad': len(get_bad_webms()),
+        'music': len(get_music_webms()),
         'best': best,
         'pending': len(get_pending_webms()),
         'trash': len(get_trash_webms()),
