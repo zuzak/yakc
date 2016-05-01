@@ -170,6 +170,7 @@ def get_stats():
         'good': (len(get_good_webms()) - best),
         'bad': len(get_bad_webms()),
         'music': len(get_music_webms()),
+        'held': len(get_held_webms()),
         'best': best,
         'pending': len(get_pending_webms()),
         'trash': len(get_trash_webms()),
@@ -263,7 +264,7 @@ def serve_all_good():
         webm = choice(good)
     except IndexError:
         abort(404, 'There are no held webms.')
-    return render_template('display.html', webm=webm, queue='good', stats=get_stats(), history=get_log(webm))
+    return render_template('display.html', webm=webm, queue='decent', stats=get_stats(), history=get_log(webm))
 
 
 @app.route('/', subdomain='best')
