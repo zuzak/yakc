@@ -10,31 +10,30 @@
               ^  ^   |                              |        +-> "affirm" --+
               |  |   |               +--+ "nsfw"    |        |-> "censure" -+
  +------------+  |   | "good"        |  v           | "best" |              v
- |               |   +---------> good.webm.website -------> best.webm.website
+ |               |   +---------> decent.webm.website -------> best.webm.website
  |               |   |             ^ |   ^          |
  |    20% chance |   | "bad"       | |   | after    |
  |    of placebo |   |             | |   | good     |  "keep" / "hold"
  |               +---+       shunt | |   | empties  v
- |                   |             | |   +---- decent.webm.website
+ |                   |             | |   +---- good.webm.website
  |                   | 80% chance  | |unshunt
  |                   v             | +------ music.webm.website
  | "forgive"                       +----------^
  +----------- bad.webm.website           vetoed (nsfw) items cannot be featured
-                     |                           any further than "good"
+                     |                           any further than "decent" / "good"
 webm withheld  <-----+  "report"
 indefinitely                       censured videos go on your personal blacklist
 
 
 	RECENT CHANGELOG:
 
+	2016-05-01 - Swapped good and decent
+
 	2016-04-30 - Created decent.webm.website as a RO good.webm.website without hold filter
 
 	2016-04-29 - Tweak delta: good to best is now +5, and report is -5.
 
 	2016-04-27 - Moved history to top right corner of screen
-
-	2016-04-26 - best.webm.website censors censured webms
-		       - top.webm.website is now the old best.webm.website
 
 	PRIVACY POLICY:
 		- Your IP address might be logged
@@ -301,8 +300,8 @@ indefinitely                       censured videos go on your personal blacklist
 					<!-- need the comments here because otherwise the newlines actually get displayed -->
 					<a title="{{ stats.bad }} bad videos" style="width:{{ 100*(stats.bad / stats.total)}}%" class="stat bad" href="//bad.webm.website">&nbsp;</a><!--
 					{% if held %}
-					--><a title="{{ count }} good videos" style="width:{{ 100*(count) / stats.total}}%" class="stat good" href="//good.webm.website">&nbsp;</a><!--
-					--><a title="{{ held }} held videos" style="width:{{ 100*(held / stats.total)}}%" class="stat held" href="//decent.webm.website">&nbsp;</a><!--
+					--><a title="{{ count }} decent videos" style="width:{{ 100*(count) / stats.total}}%" class="stat good" href="//decent.webm.website">&nbsp;</a><!--
+					--><a title="{{ held }} good videos" style="width:{{ 100*(held / stats.total)}}%" class="stat held" href="//good.webm.website">&nbsp;</a><!--
 					{% else %}
 					--><a title="{{ stats.good}} good videos" style="width:{{ 100*(stats.good / stats.total)-1}}%" class="stat good" href="//good.webm.website">&nbsp;</a><!--
 					{% endif %}
