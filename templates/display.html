@@ -201,6 +201,10 @@ indefinitely                       censured videos go on your personal blacklist
 			input {
 				margin: 5px;
 			}
+			input:disabled {
+				/* this probably looks terrible */
+				display: none;
+			}
 			.clear{clear:both;}
 		</style>
 	</head>
@@ -266,8 +270,10 @@ indefinitely                       censured videos go on your personal blacklist
 					<input class="bad" type="submit" onsubmit="return confirm('Are you sure you want to report and delete this video?');" title="Nobody should ever see this video ever again (blight)" name="verdict" value="report">
 				{% elif queue == 'best' %}
 					{% if unpromotable %}
+					<!--
 					<input class="best" type="submit" title="[cannot affirm: {{unpromotable}}]" name="verdict" value="affirm" disabled>
 					<input class="best" type="submit" title="[cannot censure: {{unpromotable}}]" name="verdict" value="censure" disabled>
+					-->
 					{% else %}
 					<input class="best" type="submit" title="This is a good video (upvote)" name="verdict" value="affirm">
 					<input class="best" type="submit" title="This video doesn't deserve to be here (downvote)" name="verdict" value="censure">
