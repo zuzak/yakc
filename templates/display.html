@@ -68,21 +68,21 @@ indefinitely                       censured videos go on your personal blacklist
 			**/
 		*{ font-size: 16px }
 			body {
+				align-items: center;
 				background-color: #222;
+				/* disable this for centred, but actual size videos
+                   enable for full-screen but not-vcentred videos:  */
+				display: flex;
+				font-family:monospace;
+				font-size: 16px;
 				height: 100%;
+				justify-content: center;
 				margin: auto;
 				overflow: hidden;
 				padding: 0;
 				position: absolute;
+				text-align: center;
 				width: 100%;
-				text-align:center;
-				font-family:monospace;
-				font-size:16px;
-				/* disable this for centred, but actual size videos
-                   enable for full-screen but not-vcentred videos:  */
-				display: flex;
-				align-items: center;
-				justify-content: center;
 			}
 			body, .ugly {
 				background-color: #a520da; /* triad with goldenrod */
@@ -114,43 +114,44 @@ indefinitely                       censured videos go on your personal blacklist
 			}
 			ul {
 				list-style-type: none;
-				padding: 0;
 				margin: 2px;
+				padding: 0;
 			}
-
 			li {
-				display:block;padding:2px;font-size:70%;
-				border: 1px solid #333;
+				background-color: #777;
 				border-radius: 4px;
-				margin:2px auto;
-				padding: 3px;
-				list-style-type: none;
+				border: 1px solid #333;
 				color: #222;
-					background-color: #777;
+				display: block;
+				font-size: 70%;
+				list-style-type: none;
+				margin:2px auto;
+				padding: 2px;
+				padding: 3px;
 			}
 			form {
-				position: fixed;
 				left: 1em;
+				position: fixed;
 				top: 1em;
 			}
 			.best form {
+				bottom: 1em;
 				left: 1em;
 				top: auto;
-				bottom: 1em;
 			}
 			li.stats {
+				background-color: magenta;
+				overflow-x:hidden;
+				overflow-y: hidden;
 				padding: 0;
-					background-color: magenta;
-						overflow-x:hidden;
-							overflow-y: hidden;
-								white-space: nowrap;
-									text-align:left;
+				text-align:left;
+				white-space: nowrap;
 			}
 			.stat {
+				display: inline-block;
 				margin:0;
 				padding:0;
-				display: inline-block;
-					text-decoration: none;
+				text-decoration: none;
 			}
 			.debug, .github, .history {
 				background-color: #777;
@@ -187,13 +188,13 @@ indefinitely                       censured videos go on your personal blacklist
 			.news {
 				background-color: #777;
 				border-radius: 0.5em;
+				bottom: 2em;
 				font-size: 0.7em;
 				overflow: hidden;
 				padding: 0.5em;
 				position: fixed;
 				right: 2em;
 				text-align: left;
-				bottom: 2em;
 				z-index: 10;
 			}
 
@@ -204,11 +205,13 @@ indefinitely                       censured videos go on your personal blacklist
 				/* this probably looks terrible */
 				display: none;
 			}
-			.clear{clear:both;}
+			.clear {
+				clear:both;
+			}
 		</style>
 	</head>
 	<body class="{{ queue }}">
-		<!-- <div class="news"></div> -->
+		<div class="news">good.webm.website and decent.webm.website just switched places</div>
 
 		<a href="/{{webm}}">
 		<video id="js-video" autoplay controls loop>
