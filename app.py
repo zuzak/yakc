@@ -164,7 +164,7 @@ def get_quality_webms():
 
 
 def get_pending_webms():
-    return list(set(get_safe_webms()) - set(get_good_webms()) - set(get_bad_webms()))
+    return list(set(get_safe_webms()) - set(get_good_webms()) - set(get_bad_webms()) - set(get_music_webms()))
 
 
 def get_trash_webms():
