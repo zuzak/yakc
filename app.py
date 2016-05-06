@@ -258,7 +258,11 @@ def serve_good():
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta))
 
 @app.route('/', subdomain='good')
-def serve_all_good():
+def redirect_to_held():
+    return redirect('//held.' + app.config['SERVER_NAME'])
+
+@app.route('/', subdomain='held')
+def serve_held():
     try:
         good = get_held_webms()
         webm = choice(good)
