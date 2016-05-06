@@ -23,6 +23,18 @@ def map_ips(ip, default):
         addrs = json.load(fp)
         return addrs.get(ip, default)
 
+def md5_to_file(md5):
+    with open('webms/md5.txt', 'r') as fp:
+        strings = fp.read()
+        fp.close()
+    if strings is not None:
+        strings = strings.split('\n')
+        for string in strings:
+            string = string.split('  ')
+            if md5 == string[0]:
+                return string[1].split('/')[1]
+    return False
+
 
 def get_ip():
     return request.environ.get('HTTP_X_REAL_IP')
@@ -224,6 +236,13 @@ def show_webm(name, domain=None):
 
     return render_template('display.html', webm=name, queue=queue, token=token, history=get_log(name))
 
+@app.route('/md5/<md5>')
+def serve_md5(md5):
+    webm = md5_to_file(md5)
+    if webm:
+        return redirect(webm)
+    else:
+        abort(404, 'md5 match not found')
 
 @app.route('/')
 def serve_random():
