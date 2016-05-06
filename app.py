@@ -278,6 +278,30 @@ def serve_good():
         abort(404, 'You need to promote some webms!')
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta))
 
+@app.route('/', subdomain='new.decent')
+def serve_unjudged_good():
+    global delta
+    best = None
+    held = 0
+    try:
+        good = get_unheld_good_webms()
+        if len(good) == 0:
+            delete_holding_queue()
+            good = get_unheld_good_webms()
+        else:
+            held = len(get_held_webms())
+        webm = choice(good)
+        if webm in get_best_webms():
+            best = True
+    except IndexError:
+        abort(404, 'You need to promote some webms!')
+    unpromotable = is_unpromotable(webm)
+    if unpromotable:
+        return redirect('/')
+    else:
+        return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta))
+
+
 @app.route('/', subdomain='good')
 def redirect_to_held():
     return redirect('//held.' + app.config['SERVER_NAME'])
