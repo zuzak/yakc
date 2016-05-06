@@ -85,6 +85,8 @@ def is_unpromotable(webm):
                     return 'cannot feature own videos'
                 if 'demoted' in line:
                     return 'you demoted this before!'
+                if 'held' in line:
+                    return 'you held this last time'
     return False
 
 
