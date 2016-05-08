@@ -4,36 +4,29 @@
 		<meta name="robots" content="noindex, nofollow">
 		<style>
 /**             "unsure"
-[entry]         +----+                                    non-actions that store
-   |            |    v                     "demote"       a log for future audit
-   +------->  website.webm  <-----------------------+
-              ^  ^   |                              |        +-> "affirm" --+
-              |  |   |               +--+ "nsfw"    |        |-> "censure" -+
- +------------+  |   | "good"        |  v           | "best" |              v
- |               |   +---------> decent.webm.website -------> best.webm.website
- |               |   |             ^ |   ^          |
- |    20% chance |   | "bad"       | |   | after    |
- |    of placebo |   |             | |   | good     |  "keep" / "hold"
- |               +---+       shunt | |   | empties  v
- |                   |             | |   +---- good.webm.website
- |                   | 80% chance  | |unshunt
- |                   v             | +------ music.webm.website
- | "forgive"                       +----------^
- +----------- bad.webm.website           vetoed (nsfw) items cannot be featured
-                     |                           any further than "decent" / "good"
-webm withheld  <-----+  "report"
-indefinitely                       censured videos go on your personal blacklist
 
-
-	RECENT CHANGELOG:
-
-	2016-05-01 - Swapped good and decent
-
-	2016-04-30 - Created decent.webm.website as a RO good.webm.website without hold filter
-
-	2016-04-29 - Tweak delta: good to best is now +5, and report is -5.
-
-	2016-04-27 - Moved history to top right corner of screen
+     best.webm.website +--> top.webm.website
+           ^
+           |    +-------> music.webm.website
+   feature |    |shunt
+           |    |   +----+ held.webm.website
+           +    v   v      ^
+   decent.webm.website +---+ hold
+           ^        +
+      good |        | demote
+           |        |
+           +        v
+          webm.website <=====+ START
+           ^        +
+   forgive |        | bad
+           |        |
+           +        v
+      bad.webm.website
+                    +
+                    | report
+                    |
+                    v
+[removed from public view]
 
 	PRIVACY POLICY:
 		- Your IP address might be logged
