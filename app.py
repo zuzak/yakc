@@ -1,5 +1,5 @@
 from flask import (Flask, send_from_directory, abort,
-                  render_template, request, flash, redirect)
+                   render_template, request, flash, redirect)
 from random import choice, random
 from uuid import uuid4
 import json
@@ -18,10 +18,12 @@ sentry = Sentry(app)
 
 delta = 0
 
+
 def map_ips(ip, default):
     with open('addresses.json') as fp:
         addrs = json.load(fp)
         return addrs.get(ip, default)
+
 
 def md5_to_file(md5):
     with open('webms/md5.txt', 'r') as fp:
@@ -35,9 +37,15 @@ def md5_to_file(md5):
                 return string[1].split('/')[1]
     return False
 
+@app.route('/aa')
+def foo():
+    return render_template('display.html')
 
 def get_ip():
-    return request.environ.get('HTTP_X_REAL_IP')
+    if (request.environ.get('HTTP_X_REAL_IP')):
+        return request.environ.get('HTTP_X_REAL_IP')
+    else:
+        return request.remote_addr
 
 
 def add_log(webm, action):
@@ -128,7 +136,7 @@ def get_name(webm):
 def generate_webm_token(webm, salt=None):
     if not salt:
         salt = uuid4().hex
-    return sha256(app.secret_key.encode() + webm.encode() + salt).hexdigest()+ ':' + salt
+    return sha256(app.secret_key.encode() + webm.encode() + salt.encode()).hexdigest() + ':' + salt
 
 
 def get_all_webms():
@@ -137,6 +145,7 @@ def get_all_webms():
 
 def get_good_webms():
     return os.listdir('webms/good')
+
 
 def get_music_webms():
     return os.listdir('webms/music')
@@ -171,7 +180,8 @@ def get_trash_webms():
     return os.listdir('webms/trash')
 
 
-def get_held_webms(): return os.listdir('webms/held')
+def get_held_webms():
+    return os.listdir('webms/held')
 
 
 def get_unheld_good_webms():
@@ -222,7 +232,7 @@ def show_webm(name, domain=None):
     queue = 'pending'
     token = None
     if name not in get_all_webms():
-        abort(404)
+        abort(404, "No webm found matching that name")
     elif name not in get_safe_webms():
         if name not in get_quality_webms():
             abort(403)
@@ -238,6 +248,7 @@ def show_webm(name, domain=None):
 
     return render_template('display.html', webm=name, queue=queue, token=token, history=get_log(name))
 
+
 @app.route('/md5/<md5>')
 def serve_md5(md5):
     webm = md5_to_file(md5)
@@ -246,12 +257,14 @@ def serve_md5(md5):
     else:
         abort(404, 'md5 match not found')
 
+
 @app.route('/')
 def serve_random():
     try:
         pending = get_pending_webms()
         webm = choice(pending)
     except IndexError:
+        abort(404, 'no webms to show!')
         pass
         # abort(404)
 #    if random() > 0.9:
@@ -278,8 +291,10 @@ def serve_good():
         abort(404, 'You need to promote some webms!')
     return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta))
 
+
 @app.route('/', subdomain='new.decent')
 def serve_unjudged_good():
+    log('NBBB')
     global delta
     best = None
     held = 0
@@ -305,6 +320,7 @@ def serve_unjudged_good():
 @app.route('/', subdomain='good')
 def redirect_to_held():
     return redirect('//held.' + app.config['SERVER_NAME'])
+
 
 @app.route('/', subdomain='held')
 def serve_held():
@@ -337,6 +353,7 @@ def serve_best_nocensor():
     token = generate_webm_token(webm)
     return render_template('display.html', webm=webm, queue='best', token=token, history=get_log(webm), unpromotable=is_votable(webm))
 
+
 @app.route('/', subdomain='music')
 def serve_music():
     try:
@@ -346,6 +363,7 @@ def serve_music():
         abort(404, 'You need to shunt some videos!')
     token = generate_webm_token(webm)
     return render_template('display.html', webm=webm, queue='music', token=token, history=get_log(webm), count=len(webms))
+
 
 @app.route('/', subdomain='index')
 def serve_best_index():
@@ -412,6 +430,7 @@ def unmark_bad(webm):
     add_log(webm, 'forgiven')
     os.unlink('webms/bad/' + webm)
 
+
 def mark_music(webm):
     global delta
     delta += 3
@@ -419,12 +438,14 @@ def mark_music(webm):
     os.symlink('webms/all/' + webm, 'webms/music/' + webm)
     add_log(webm, 'shunted')
 
+
 def unmark_music(webm):
     global delta
     delta -= 3
     os.unlink('webms/music/' + webm)
     os.symlink('webms/all/' + webm, 'webms/good/' + webm)
     add_log(webm, 'unshunted')
+
 
 def mark_best(webm):
     global delta;
@@ -542,11 +563,10 @@ if __name__ == '__main__':
 
     # probably should make this persist
     app.config.update(
-        SECRET_KEY=uuid4().hex,
-        SERVER_NAME='webm.website'
+        SECRET_KEY=uuid4().hex
     )
 
     log = logging.getLogger('werkzeug')
-    log.setLevel(logging.WARNING)
+    log.setLevel(logging.INFO)
 
     app.run(host='0.0.0.0', port=3000)
