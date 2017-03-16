@@ -22,6 +22,7 @@ delta = 0
 def map_ips(ip, default):
     return get_ips().get(ip, default)
 
+
 def get_ips():
     with open('addresses.json') as fp:
         return json.load(fp)
@@ -38,6 +39,7 @@ def md5_to_file(md5):
             if md5 == string[0]:
                 return string[1].split('/')[1]
     return False
+
 
 def get_ip():
     if (request.environ.get('HTTP_X_REAL_IP')):
@@ -57,11 +59,11 @@ def add_log(webm, action):
     print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
-
 def get_user():
     user = get_ip()
     user = map_ips(user, user)
     return user
+
 
 def set_user(ip, user):
     ips = get_ips()
@@ -80,16 +82,18 @@ def set_user(ip, user):
 
     if any(substr in user for substr in blacklist):
         return False
-    
+
     ips[ip] = user
 
     with open('addresses.json', 'w') as fp:
         fp.write(json.dumps(ips))
     return True
 
+
 def ban_user():
     with open('bans.txt', 'a') as fp:
         fp.write(get_ip()+'\n')
+
 
 def user_banned():
     bans = open('bans.txt').read().splitlines()
@@ -98,12 +102,11 @@ def user_banned():
     else:
         return False
 
+
 @app.route('/settings/request-ban')
 def request_ban():
     ban_user()
     return send_from_directory('webms', 'neil.jpg'), 201
-
-
 
 
 def get_user_censured(webm):
@@ -181,7 +184,8 @@ def get_name(webm):
 def generate_webm_token(webm, salt=None):
     if not salt:
         salt = uuid4().hex
-    return sha256(app.secret_key.encode() + webm.encode() + salt.encode()).hexdigest() + ':' + salt
+    return sha256(app.secret_key.encode(
+        ) + webm.encode() + salt.encode()).hexdigest() + ':' + salt
 
 
 def get_all_webms():
@@ -218,7 +222,8 @@ def get_quality_webms():
 
 
 def get_pending_webms():
-    return list(set(get_safe_webms()) - set(get_good_webms()) - set(get_bad_webms()) - set(get_music_webms()))
+    return list(set(get_safe_webms()) - set(get_good_webms()) -
+                set(get_bad_webms()) - set(get_music_webms()))
 
 
 def get_trash_webms():
@@ -255,12 +260,17 @@ def delete_holding_queue():
 @app.route('/', subdomain='about')
 @app.route('/', subdomain='privacy')
 def privacy():
-    return render_template('privacypolicy.html', stats=get_stats(), user=get_user())
+    return render_template(
+        'privacypolicy.html',
+        stats=get_stats(),
+     user=get_user())
+
 
 @app.route('/<name>.webm')
 @app.route('/<name>.webm', subdomain='<domain>')
 def serve_webm(name, domain=None):
-    if request.accept_mimetypes.best_match(['video/webm', 'text/html']) == 'text/html':
+    if request.accept_mimetypes.best_match(
+            ['video/webm', 'text/html']) == 'text/html':
         return redirect(name)
     name = name + '.webm'
     if name not in get_all_webms():
@@ -276,6 +286,7 @@ def serve_webm(name, domain=None):
 
     add_log(name, 'viewed')
     return send_from_directory('webms/all', name)
+
 
 def metadata_exists(webm):
     return os.path.isfile('webms/metadata/' + webm)
@@ -305,7 +316,12 @@ def show_webm(name, domain=None):
         queue = 'bad'
         token = generate_webm_token(name)
 
-    return render_template('display.html', webm=name, queue=queue, token=token, history=get_log(name))
+    return render_template(
+        'display.html',
+        webm=name,
+        queue=queue,
+        token=token,
+     history=get_log(name))
 
 
 @app.route('/md5/<md5>')
@@ -328,7 +344,15 @@ def serve_random():
         pass
     if user_banned():
         return send_from_directory('webms', 'neil.jpg'), 403
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), count=len(pending), history=get_log(webm), stats=get_stats(), unpromotable=is_unpromotable(webm), user=get_user())
+    return render_template(
+        'display.html',
+        webm=webm,
+        token=generate_webm_token(webm),
+        count=len(pending),
+        history=get_log(webm),
+        stats=get_stats(),
+        unpromotable=is_unpromotable(webm),
+     user=get_user())
 
 
 @app.route('/', subdomain='decent')
@@ -348,7 +372,19 @@ def serve_good():
             best = True
     except IndexError:
         abort(404, 'You need to promote some webms!')
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta), user=get_user())
+    return render_template(
+        'display.html',
+        webm=webm,
+        token=generate_webm_token(webm),
+        queue='good',
+        count=len(good),
+        best=best,
+        held=held,
+        unpromotable=is_unpromotable(webm),
+        stats=get_stats(),
+        history=get_log(webm),
+        debug=u'\u0394'+str(delta),
+     user=get_user())
 
 
 @app.route('/', subdomain='new.decent')
@@ -372,7 +408,19 @@ def serve_unjudged_good():
     if unpromotable:
         return redirect('/')
     else:
-        return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta), user=get_user())
+        return render_template(
+            'display.html',
+            webm=webm,
+            token=generate_webm_token(webm),
+            queue='good',
+            count=len(good),
+            best=best,
+            held=held,
+            unpromotable=is_unpromotable(webm),
+            stats=get_stats(),
+            history=get_log(webm),
+            debug=u'\u0394'+str(delta),
+            user=get_user())
 
 
 @app.route('/', subdomain='good')
@@ -387,7 +435,12 @@ def serve_held():
         webm = choice(good)
     except IndexError:
         abort(404, 'There are no held webms.')
-    return render_template('display.html', webm=webm, queue='decent', stats=get_stats(), history=get_log(webm))
+    return render_template(
+        'display.html',
+        webm=webm,
+        queue='decent',
+        stats=get_stats(),
+     history=get_log(webm))
 
 
 @app.route('/', subdomain='best')
@@ -399,7 +452,13 @@ def serve_best():
     if get_user_censured(webm):
         return redirect('/', 302)
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='best', token=token, unpromotable=is_votable(webm), user=get_user())
+    return render_template(
+        'display.html',
+        webm=webm,
+        queue='best',
+        token=token,
+        unpromotable=is_votable(webm),
+     user=get_user())
 
 
 @app.route('/', subdomain='top')
@@ -409,7 +468,13 @@ def serve_best_nocensor():
     except IndexError:
         abort(404, 'There are no featured webms.')
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='best', token=token, history=get_log(webm), unpromotable=is_votable(webm))
+    return render_template(
+        'display.html',
+        webm=webm,
+        queue='best',
+        token=token,
+        history=get_log(webm),
+     unpromotable=is_votable(webm))
 
 
 @app.route('/', subdomain='music')
@@ -420,7 +485,13 @@ def serve_music():
     except IndexError:
         abort(404, 'You need to shunt some videos!')
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='music', token=token, history=get_log(webm), count=len(webms))
+    return render_template(
+        'display.html',
+        webm=webm,
+        queue='music',
+        token=token,
+        history=get_log(webm),
+     count=len(webms))
 
 
 @app.route('/', subdomain='index')
@@ -436,18 +507,24 @@ def serve_bad():
         webm = choice(webms)
     except IndexError:
         abort(404, 'No webms have been marked bad.')
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='bad', count=len(webms), stats=get_stats())
+    return render_template(
+        'display.html',
+        webm=webm,
+        token=generate_webm_token(webm),
+        queue='bad',
+        count=len(webms),
+     stats=get_stats())
 
 
 def mark_good(webm):
-    global delta;
+    global delta
     add_log(webm, 'marked good')
     delta += 1
     os.symlink('webms/all/' + webm, 'webms/good/' + webm)
 
 
 def mark_bad(webm):
-    global delta;
+    global delta
     if random() > 0.8:
         # For a small percentage of "bad" moves, don't actually do it
         # That way, some webms get a second chance
@@ -459,7 +536,7 @@ def mark_bad(webm):
 
 
 def mark_ugly(webm):
-    global delta;
+    global delta
     delta -= 5
     add_log(webm, 'reported')
     os.symlink('webms/all/' + webm, 'webms/trash/' + webm)
@@ -476,14 +553,14 @@ def mark_hold(webm):
 
 
 def unmark_good(webm):
-    global delta;
+    global delta
     delta -= 1
     add_log(webm, 'demoted')
     os.unlink('webms/good/' + webm)
 
 
 def unmark_bad(webm):
-    global delta;
+    global delta
     delta += 1
     add_log(webm, 'forgiven')
     os.unlink('webms/bad/' + webm)
@@ -506,14 +583,13 @@ def unmark_music(webm):
 
 
 def mark_best(webm):
-    global delta;
+    global delta
     delta += 5
     add_log(webm, 'featured ****')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(('http://best.webm.website/' + webm + ' has been marked as "best" by ' + get_user()).encode(), (
-        'saraneth.lon.fluv.net',
-        41337
-    ))
+    sock.sendto(('http://best.webm.website/' + webm +
+                 ' has been marked as "best" by ' + get_user()).encode(),
+                ('saraneth.lon.fluv.net', 41337))
     os.symlink('webms/all/' + webm, 'webms/best/' + webm)
 
 
@@ -534,6 +610,7 @@ def change_nick():
         return redirect('/')
     else:
         abort(400, 'unacceptable nickname')
+
 
 @app.route('/moderate', methods=['POST'])
 @app.route('/moderate', methods=['POST'], subdomain='<domain>')
@@ -618,9 +695,11 @@ def moderate_webm(domain=None):
         flash('Unable to mark ' + webm + ' as ' + verdict)
     return redirect('/')
 
+
 @app.route('/stats.json', subdomain='api')
 def api():
     return jsonify(get_stats())
+
 
 @app.errorhandler(404)
 @app.errorhandler(400)
@@ -629,9 +708,12 @@ def api():
 def page_not_found(e):
     return render_template('error.html', e=e), e.code
 
+
 @app.errorhandler(500)
 def server_error(e):
-    return render_template('error.html', e=e, sentry=g.sentry_event_id, dsn=sentry.client.get_public_dsn('https')), 500
+    return render_template(
+        'error.html', e=e, sentry=g.sentry_event_id,
+        dsn=sentry.client.get_public_dsn('https')), 500
 
 if __name__ == '__main__':
 
