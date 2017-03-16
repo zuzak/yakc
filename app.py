@@ -1,5 +1,5 @@
 from flask import (Flask, send_from_directory, abort,
-                   render_template, request, flash, redirect)
+                   render_template, request, flash, redirect, g, jsonify)
 from random import choice, random
 from uuid import uuid4
 import json
@@ -20,9 +20,11 @@ delta = 0
 
 
 def map_ips(ip, default):
+    return get_ips().get(ip, default)
+
+def get_ips():
     with open('addresses.json') as fp:
-        addrs = json.load(fp)
-        return addrs.get(ip, default)
+        return json.load(fp)
 
 
 def md5_to_file(md5):
@@ -37,32 +39,77 @@ def md5_to_file(md5):
                 return string[1].split('/')[1]
     return False
 
-@app.route('/aa')
-def foo():
-    return render_template('display.html')
-
 def get_ip():
     if (request.environ.get('HTTP_X_REAL_IP')):
         return request.environ.get('HTTP_X_REAL_IP')
+    elif request.environ.get('X-Forwarded-For'):
+        return request.environ.get('X-Forwarded-For')
     else:
-        return request.remote_addr
+        return request.access_route[0]
 
 
 def add_log(webm, action):
     global delta
-    ip = get_ip()
-    ip = map_ips(ip, ip)
+    ip = get_user()
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     with open('webms/metadata/' + webm, 'a') as logfile:
         logfile.write(string + '\n')
     print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
+
+def get_user():
+    user = get_ip()
+    user = map_ips(user, user)
+    return user
+
+def set_user(ip, user):
+    ips = get_ips()
+    blacklist = [
+        ' ',
+        'good',
+        'demote',
+        'held',
+        'censure',
+        'affirm',
+        'feature',
+        '.'
+    ]
+    if user in ips.values():
+        return False
+
+    if any(substr in user for substr in blacklist):
+        return False
+    
+    ips[ip] = user
+
+    with open('addresses.json', 'w') as fp:
+        fp.write(json.dumps(ips))
+    return True
+
+def ban_user():
+    with open('bans.txt', 'a') as fp:
+        fp.write(get_ip()+'\n')
+
+def user_banned():
+    bans = open('bans.txt').read().splitlines()
+    if get_ip() in bans:
+        return True
+    else:
+        return False
+
+@app.route('/settings/request-ban')
+def request_ban():
+    ban_user()
+    return send_from_directory('webms', 'neil.jpg'), 201
+
+
+
+
 def get_user_censured(webm):
     log = get_log(webm)
     if log is not None:
-        user = get_ip()
-        user = map_ips(user, user)
+        user = get_user()
         log = log.split('\n')
         for line in log:
             if user in line:
@@ -78,11 +125,12 @@ def is_unpromotable(webm):
         return 'already featured'
     if webm in get_vetoed_webms():
         return 'this video has been vetoed'
-    user = get_ip()
-    user = map_ips(user, user)
+    user = get_user()
     if user == '(central)':
         return 'this shared IP address is banned'
     if user.startswith('94.119'):
+        return 'this shared IP address is banned'
+    if user.startswith('(delph '):
         return 'this shared IP address is banned'
     log = get_log(webm)
     if log is not None:
@@ -99,8 +147,7 @@ def is_unpromotable(webm):
 
 
 def is_votable(webm):
-    user = get_ip()
-    user = map_ips(user, user)
+    user = get_user()
     log = get_log(webm)
     if log is not None:
         log = log.split('\n')
@@ -207,14 +254,22 @@ def delete_holding_queue():
     os.makedirs('webms/held')
 
 
-@app.route('/<name>.webm', subdomain='<domain>')
+@app.route('/', subdomain='about')
+@app.route('/', subdomain='privacy')
+def privacy():
+    return render_template('privacypolicy.html', stats=get_stats(), user=get_user())
+
 @app.route('/<name>.webm')
+@app.route('/<name>.webm', subdomain='<domain>')
 def serve_webm(name, domain=None):
     if request.accept_mimetypes.best_match(['video/webm', 'text/html']) == 'text/html':
         return redirect(name)
     name = name + '.webm'
     if name not in get_all_webms():
-        abort(404, 'Cannot find that webm!')
+        if metadata_exists(name):
+            abort(410, 'This webm has been deleted.')
+        else:
+            abort(404, 'Cannot find that webm!')
 
     if name in get_trash_webms():
         if name not in get_quality_webms():
@@ -224,6 +279,9 @@ def serve_webm(name, domain=None):
     add_log(name, 'viewed')
     return send_from_directory('webms/all', name)
 
+def metadata_exists(webm):
+    return os.path.isfile('webms/metadata/' + webm)
+
 
 @app.route('/<name>', subdomain='<domain>')
 @app.route('/<name>')
@@ -232,7 +290,10 @@ def show_webm(name, domain=None):
     queue = 'pending'
     token = None
     if name not in get_all_webms():
-        abort(404, "No webm found matching that name")
+        if metadata_exists(name):
+            abort(410, "This webm has been deleted")
+        else:
+            abort(404, "No webm found matching that name")
     elif name not in get_safe_webms():
         if name not in get_quality_webms():
             abort(403)
@@ -258,6 +319,7 @@ def serve_md5(md5):
         abort(404, 'md5 match not found')
 
 
+@app.route('/', subdomain='pending')
 @app.route('/')
 def serve_random():
     try:
@@ -266,10 +328,9 @@ def serve_random():
     except IndexError:
         abort(404, 'no webms to show!')
         pass
-        # abort(404)
-#    if random() > 0.9:
-#        return send_from_directory('webms', 'neil.jpg')
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), count=len(pending), history=get_log(webm), stats=get_stats(), unpromotable=is_unpromotable(webm))
+    if user_banned():
+        return send_from_directory('webms', 'neil.jpg'), 403
+    return render_template('display.html', webm=webm, token=generate_webm_token(webm), count=len(pending), history=get_log(webm), stats=get_stats(), unpromotable=is_unpromotable(webm), user=get_user())
 
 
 @app.route('/', subdomain='decent')
@@ -289,12 +350,11 @@ def serve_good():
             best = True
     except IndexError:
         abort(404, 'You need to promote some webms!')
-    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta))
+    return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta), user=get_user())
 
 
 @app.route('/', subdomain='new.decent')
 def serve_unjudged_good():
-    log('NBBB')
     global delta
     best = None
     held = 0
@@ -314,12 +374,12 @@ def serve_unjudged_good():
     if unpromotable:
         return redirect('/')
     else:
-        return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta))
+        return render_template('display.html', webm=webm, token=generate_webm_token(webm), queue='good', count=len(good), best=best, held=held, unpromotable=is_unpromotable(webm), stats=get_stats(), history=get_log(webm), debug=u'\u0394'+str(delta), user=get_user())
 
 
 @app.route('/', subdomain='good')
 def redirect_to_held():
-    return redirect('//held.' + app.config['SERVER_NAME'])
+    return redirect('//decent.' + app.config['SERVER_NAME'])
 
 
 @app.route('/', subdomain='held')
@@ -341,7 +401,7 @@ def serve_best():
     if get_user_censured(webm):
         return redirect('/', 302)
     token = generate_webm_token(webm)
-    return render_template('display.html', webm=webm, queue='best', token=token, unpromotable=is_votable(webm))
+    return render_template('display.html', webm=webm, queue='best', token=token, unpromotable=is_votable(webm), user=get_user())
 
 
 @app.route('/', subdomain='top')
@@ -452,12 +512,30 @@ def mark_best(webm):
     delta += 5
     add_log(webm, 'featured ****')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto('http://best.webm.website/' + webm + ' has been marked as "best" by ' + map_ips(get_ip(), get_ip()), (
+    sock.sendto(('http://best.webm.website/' + webm + ' has been marked as "best" by ' + get_user()).encode(), (
         'saraneth.lon.fluv.net',
         41337
     ))
     os.symlink('webms/all/' + webm, 'webms/best/' + webm)
 
+
+@app.route('/settings/change-nick', methods=['POST'])
+def change_nick():
+    nick = request.form['nick']
+    user = get_user()
+
+    ips = get_ips()
+    if nick in ips.values():
+        abort(400, 'duplicate nickname')
+
+    if user in ips:
+        abort(403, 'you have already set a nickname')
+
+    if set_user(get_ip(), nick):
+        flash('Set nickname to ' + get_user())
+        return redirect('/')
+    else:
+        abort(400, 'unacceptable nickname')
 
 @app.route('/moderate', methods=['POST'])
 @app.route('/moderate', methods=['POST'], subdomain='<domain>')
@@ -542,6 +620,20 @@ def moderate_webm(domain=None):
         flash('Unable to mark ' + webm + ' as ' + verdict)
     return redirect('/')
 
+@app.route('/stats.json', subdomain='api')
+def api():
+    return jsonify(get_stats())
+
+@app.errorhandler(404)
+@app.errorhandler(400)
+@app.errorhandler(403)
+@app.errorhandler(410)
+def page_not_found(e):
+    return render_template('error.html', e=e), e.code
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('error.html', e=e, sentry=g.sentry_event_id, dsn=sentry.client.get_public_dsn('https')), 500
 
 if __name__ == '__main__':
 
@@ -563,7 +655,9 @@ if __name__ == '__main__':
 
     # probably should make this persist
     app.config.update(
-        SECRET_KEY=uuid4().hex
+        SECRET_KEY=uuid4().hex,
+        SERVER_NAME='webm.website',
+        TEMPLATES_AUTO_RELOAD=True
     )
 
     log = logging.getLogger('werkzeug')
