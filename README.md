@@ -1,5 +1,7 @@
 # yakc
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/609f8fbe1f6944c097f9fbb9eec852ac)](https://www.codacy.com/app/douglas/yakc?utm_source=github.com&utm_medium=referral&utm_content=zuzak/yakc&utm_campaign=badger)
+
 Displays a random webm from a large collection, and prompts users to moderate
 them as good or bad, for future use.
 
