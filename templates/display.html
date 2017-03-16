@@ -3,46 +3,14 @@
 		<title>webm website</title>
 		<meta name="robots" content="noindex, nofollow">
 		<style>
-/**             "unsure"
+	/**
 
-     best.webm.website +--> top.webm.website
-           ^
-           |    +-------> music.webm.website
-   feature |    |shunt
-           |    |   +----+ held.webm.website
-           +    v   v      ^
-   decent.webm.website +---+ hold
-           ^        +
-      good |        | demote
-           |        |
-           +        v
-          webm.website <=====+ START
-           ^        +
-   forgive |        | bad
-           |        |
-           +        v
-      bad.webm.website
-                    +
-                    | report
-                    |
-                    v
-[removed from public view]
-
-	PRIVACY POLICY:
-		- Your IP address might be logged
-		- Your actions definitely are
-		- Either might be disclosed without warning
-
-	ABUSE POLICY:
-		- webms are pulled from another social media website without vetting
-		- if you see something terrible, hit "report" where possible,
-			which will instantly render the webm inaccessible
-		- report flagrant abuse to abuse@fluv.net
+	(the flowchart that was here has moved to its own page)
 
 	DEVELOPMENT:
 		- Patches and issues welcome: https://github.com/zuzak/yakc
 
-		Copyright (c) 2016, Douglas Gardner <douglas@chippy.ch>
+		Copyright (c) 2016, Douglas Gardner https://chippy.ch
 
 		Permission to use, copy, modify, and/or distribute this software for any
 		purpose with or without fee is hereby granted, provided that the above
@@ -59,13 +27,12 @@
 		A product of the Zuzakistan Common Agricultural Policy
 
 			**/
-		*{ font-size: 16px }
 			body {
 				align-items: center;
 				background-color: #222;
 				/* disable this for centred, but actual size videos
                    enable for full-screen but not-vcentred videos:  */
-				display: flex;
+ 				/*display: flex;*/
 				font-family:monospace;
 				font-size: 16px;
 				height: 100%;
@@ -77,7 +44,14 @@
 				text-align: center;
 				width: 100%;
 			}
-			body, .ugly {
+			video:hover {
+				position: fixed;
+				top:0;
+				left:0;
+				height: auto;
+				width: auto;
+		  	}
+			body, .ugly, .pending {
 				background-color: #a520da; /* triad with goldenrod */
 				border-color: #a520da; /* triad with goldenrod */
 			}
@@ -119,10 +93,9 @@
 				font-size: 70%;
 				list-style-type: none;
 				margin:2px auto;
-				padding: 2px;
 				padding: 3px;
 			}
-			form {
+			form#moderation {
 				left: 1em;
 				position: fixed;
 				top: 1em;
@@ -138,6 +111,7 @@
 				overflow-x:hidden;
 				overflow-y: hidden;
 				padding: 0;
+				margin-bottom: 0.5em;
 				text-align:left;
 				white-space: nowrap;
 			}
@@ -192,6 +166,19 @@
 				z-index: 10;
 			}
 
+			.user {
+				background-color: #777;
+				border-radius: 0.5em;
+				bottom: 2em;
+				font-size: 0.7em;
+				overflow: hidden;
+				padding: 0.5em;
+				position: fixed;
+				left: 2em;
+				text-align: left;
+				z-index: 10;
+			}
+
 			input {
 				margin: 5px;
 			}
@@ -203,10 +190,28 @@
 			.clear {
 				clear:both;
 			}
+			.privlink {
+				float:right;
+			}
 		</style>
 	</head>
 	<body class="{{ queue }}">
-		<div class="news">good.webm.website and decent.webm.website just switched places</div>
+		<div class="news">
+			<strong>Welcome to webm.website</strong><br>
+			If you get any non-loading webms that's a bug, please report it. <a class="privlink" href="//about.webm.website">Privacy & About</a></div>
+		{% if user %}
+			{% if '.' not in user %}
+			<div class="user">Hello, {{ user }}. (<a href="/settings/request-ban" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)</div>
+				{% else %}
+				<div class="user">
+					<form action="/settings/change-nick" method="POST">
+						<label for="nick">What's your name?</label>
+						<input required type="text" placeholder="{{ user }}" id="nick" name="nick"></input>
+						<input type="submit" value="Sign in"</input>
+					</form>
+				</div>
+			{% endif %}
+		{% endif %}
 
 		<a href="/{{webm}}">
 		<video id="js-video" autoplay controls loop>
@@ -214,7 +219,7 @@
 		</video>
 		</a>
 		{% if not domain %}
-			<form action="/moderate" method="POST">
+			<form id="moderation" action="/moderate" method="POST">
 			{% if token %}
 				<input type="hidden" name="token" value="{{ token }}">
 				<input type="hidden" name="webm" value="{{ webm }}">
@@ -226,7 +231,7 @@
 					<input class="bad right" type="submit" title="[cannot demote: {{ unpromotable }}]" name="verdict" value="bad" disabled>
 					{% else %}
 					<input class="good left" type="submit" title="I like this video (wheat)" name="verdict" value="good">
-					<!-- <input type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure"> -->
+					<input class="ugly" type="submit" title="I'm not sure where this video should be (skip)" name="verdict" value="unsure">
 					<input class="bad right" type="submit" title="I don't like this video (chaff)" name="verdict" value="bad">
 					{% endif %}
 				{% elif queue == 'music' %}
@@ -278,6 +283,18 @@
 				{% endif %}
 			{% endif %}
 			<ul>
+			{% if stats %}
+				<li class="stats">
+					<!--
+					{% for stat in stats %}
+						{% if stat != 'total' %}
+					--><a title="{{ stats[stat]}} {{ stat }} videos" style="width:{{ 100*(stats[stat] / stats.total)}}%" class="stat {{stat}}" href="//{{stat}}.webm.website">&nbsp;</a><!--
+						{% endif %}
+					{% endfor %}
+					-->
+					<div class="clear"></div>
+				</li>
+			{% endif %}
 			{% if count %}
 				<li>
 					{{ count }} {{ queue }} videos
@@ -293,25 +310,6 @@
 			{% if held %}
 				<li> {{held}} held videos </li>
 			{% endif %}
-			{% if stats %}
-				<li class="stats">
-					<!-- need the comments here because otherwise the newlines actually get displayed -->
-					<a title="{{ stats.bad }} bad videos" style="width:{{ 100*(stats.bad / stats.total)}}%" class="stat bad" href="//bad.webm.website">&nbsp;</a><!--
-					{% if held %}
-					--><a title="{{ count }} decent videos" style="width:{{ 100*(count) / stats.total}}%" class="stat good" href="//decent.webm.website">&nbsp;</a><!--
-					--><a title="{{ held }} good videos" style="width:{{ 100*(held / stats.total)}}%" class="stat held" href="//good.webm.website">&nbsp;</a><!--
-					{% else %}
-					--><a title="{{ stats.good }} good videos" style="width:{{ 100*(stats.good) / stats.total}}%" class="stat good" href="//decent.webm.website">&nbsp;</a><!--
-					--><a title="{{ stats.good }} good videos" style="width:{{ 100*(stats.held) / stats.total}}%" class="stat held" href="//good.webm.website">&nbsp;</a><!--
-					{% endif %}
-					--><a title="{{ stats.best }} best videos" style="width:{{ 100*(stats.best / stats.total)}}%" class="stat best" href="//best.webm.website">&nbsp;</a><!--
-					--><a title="{{ stats.music }} best videos" style="width:{{ 100*(stats.music / stats.total)}}%" class="stat music" href="//music.webm.website">&nbsp;</a><!--
-					--><a title="{{ stats.trash }} reported videos" style="width:{{ 100*(stats.trash / stats.total)}}%" class="stat bad">&nbsp;</a><!--
-					--><a title="{{ stats.pending }} pending videos" style="width:{{ 100*(stats.pending / stats.total)-2}}%" class="stat ugly" href="//webm.website">&nbsp;</a>
-					<!-- {{ stats.good }} -->
-					<div class="clear" />
-				</li>
-				{% endif %}
 			</ul>
 		</form>
 		{% endif %}
@@ -331,7 +329,15 @@
 
   ga('create', 'UA-20878451-6', 'auto');
     ga('send', 'pageview');
+{% if user %}
+	ga('set', 'userId', '{{user}}');// Set the user ID using signed-in user_id.
+			{% endif %}
 
+
+			document.getElementById('moderation').onsubmit = function () {
+				console.log('a');
+				ga('send', 'event', 'moderation', 'submit');
+			};
 		</script>
 		{% if queue == 'good' %}
 		<script>
