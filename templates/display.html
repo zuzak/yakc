@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html> <head>
+<html>
+	{% if stats %} {% if stats.version %} <!-- {{ stats.version }} --> {% endif %} {% endif %}
+	<head>
 		<title>webm website</title>
 		<meta name="robots" content="noindex, nofollow">
 		<style>

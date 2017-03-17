@@ -37,7 +37,7 @@ def get_ips():
 
 
 git_version = subprocess.check_output(
-    ['git', 'describe', '--all', '--long'])[:-1].decode('utf-8')
+    ['git', 'describe', '--long'])[:-1].decode('utf-8')
 
 
 def md5_to_file(md5):
@@ -109,7 +109,9 @@ def ban_user():
 
 def user_banned():
     try:
-        with open('bans.txt').read().splitlines() as bans:
+        with open('bans.txt') as text:
+            bans = text.read().splitlines()
+
             if get_ip() in bans:
                 return True
             else:
