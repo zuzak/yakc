@@ -36,9 +36,9 @@ def get_ips():
             return placeholder
 
 
+git_version = subprocess.check_output(
+    ['git', 'describe', '--all', '--long'])[:-1].decode('utf-8')
 
-
-git_version = subprocess.check_output(['git', 'describe', '--all', '--long'])[:-1].decode('utf-8')
 
 def md5_to_file(md5):
     with open('webms/md5.txt', 'r') as fp:
