@@ -109,7 +109,9 @@ def ban_user():
 
 def user_banned():
     try:
-        with open('bans.txt').read().splitlines() as bans:
+        with open('bans.txt') as text:
+            bans = text.read().splitlines()
+
             if get_ip() in bans:
                 return True
             else:
