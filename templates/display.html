@@ -286,9 +286,9 @@
 			{% if stats %}
 				<li class="stats">
 					<!--
-					{% for stat in stats %}
+					{% for stat in stats.counts %}
 						{% if stat != 'total' %}
-					--><a title="{{ stats[stat]}} {{ stat }} videos" style="width:{{ 100*(stats[stat] / stats.total)}}%" class="stat {{stat}}" href="//{{stat}}.webm.website">&nbsp;</a><!--
+					--><a title="{{ stats.counts[stat]}} {{ stat }} videos" style="width:{{ 100*(stats.counts[stat] / stats.counts.total)}}%" class="stat {{stat}}" href="//{{stat}}.webm.website">&nbsp;</a><!--
 						{% endif %}
 					{% endfor %}
 					-->

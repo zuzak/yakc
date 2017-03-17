@@ -7,6 +7,7 @@ import logging
 from hashlib import sha256
 import shutil
 import socket
+import subprocess
 import os
 from time import strftime
 
@@ -27,6 +28,7 @@ def get_ips():
     with open('addresses.json') as fp:
         return json.load(fp)
 
+git_version = subprocess.check_output(['git', 'describe', '--all', '--long'])[:-1].decode('utf-8')
 
 def md5_to_file(md5):
     with open('webms/md5.txt', 'r') as fp:
@@ -241,14 +243,17 @@ def get_unheld_good_webms():
 def get_stats():
     best = len(get_best_webms())
     return {
-        'good': (len(get_good_webms()) - best),
-        'bad': len(get_bad_webms()),
-        'music': len(get_music_webms()),
-        'held': len(get_held_webms()),
-        'best': best,
-        'pending': len(get_pending_webms()),
-        'trash': len(get_trash_webms()),
-        'total': len(get_all_webms())
+        'counts': {
+            'good': (len(get_good_webms()) - best),
+            'bad': len(get_bad_webms()),
+            'music': len(get_music_webms()),
+            'held': len(get_held_webms()),
+            'best': best,
+            'pending': len(get_pending_webms()),
+            'trash': len(get_trash_webms()),
+            'total': len(get_all_webms())
+        },
+        'version': str(git_version)
     }
 
 
@@ -737,7 +742,10 @@ if __name__ == '__main__':
     app.config.update(
         SECRET_KEY=uuid4().hex,
         SERVER_NAME='webm.website',
-        TEMPLATES_AUTO_RELOAD=True
+        TEMPLATES_AUTO_RELOAD=True,
+        SENTRY_CONFIG={
+            'release': git_version
+        }
     )
 
     log = logging.getLogger('werkzeug')
