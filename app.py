@@ -25,8 +25,18 @@ def map_ips(ip, default):
 
 
 def get_ips():
-    with open('addresses.json') as fp:
-        return json.load(fp)
+    fn = 'addresses.json'
+    try:
+        with open(fn, 'r') as fp:
+            return json.load(fp)
+    except FileNotFoundError:
+        placeholder = {"127.0.0.1": "sysadmin"}
+        with open(fn, 'w') as fp:
+            fp.write(json.dumps(placeholder))
+            return placeholder
+
+
+
 
 git_version = subprocess.check_output(['git', 'describe', '--all', '--long'])[:-1].decode('utf-8')
 
