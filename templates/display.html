@@ -204,7 +204,7 @@
 		<div class="news">
 			<form class="fs-toggle">
 				<label for="js-fs"><abbr title="Full-screen">FS</abbr></label>
-				<input type="checkbox" id="js-fs" checked />
+				<input type="checkbox" id="js-fs" />
 			</form>
 			<strong>Welcome to webm.website</strong><br>
 			You can now toggle between webm sizes with this checkbox.
@@ -365,15 +365,29 @@
 		</script>
 		{% endif %}
 		<script>
-			function actualSize() {
-				if ( !document.getElementById( "js-fs" ).checked ) {
-					document.getElementById( "js-body" ).classList.add( "actualsize" );
-				} else {
+			// Code to toggle full-screen and actual-size webms
+			// The persistence when one hits a button makes it complicated :)
+			document.getElementById( "js-fs" ).addEventListener( "change", function () {
+				localStorage.setItem('fullscreen', document.getElementById( "js-fs" ).checked );
+				changeSize(localStorage.getItem('fullscreen'));
+			} );
+
+			function changeSize(fullscreen) {
+				console.log('b', fullscreen);
+				if ( fullscreen === "true") {
 					document.getElementById( "js-body" ).classList.remove( "actualsize" );
+				} else {
+					document.getElementById( "js-body" ).classList.add( "actualsize" );
 				}
 			}
-			document.getElementById( "js-fs" ).addEventListener( "change", actualSize );
-			actualSize();
+
+			var fs = localStorage.getItem('fullscreen');
+			if ( fs === 'false' ) {
+				document.getElementById( 'js-fs' ).checked = false;
+			} else {
+				document.getElementById( 'js-fs' ).checked = true;
+			}
+			changeSize(fs);
 		</script>
 	</body>
 </html>
