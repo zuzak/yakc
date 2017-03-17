@@ -193,12 +193,27 @@
 			.privlink {
 				float:right;
 			}
+			.fs-toggle {
+				float:right;
+				padding: 0;
+				margin: 0;
+			}
+			.fs-toggle input {
+				padding: 0;
+				margin: 0;
+			}
+			.actualsize { display: flex;}
 		</style>
 	</head>
-	<body class="{{ queue }}">
+	<body class="{{ queue }}" id="js-body">
 		<div class="news">
+			<form class="fs-toggle">
+				<label for="js-fs"><abbr title="Full-screen">FS</abbr></label>
+				<input type="checkbox" id="js-fs" checked />
+			</form>
 			<strong>Welcome to webm.website</strong><br>
-			If you get any non-loading webms that's a bug, please report it. <a class="privlink" href="//about.webm.website">Privacy & About</a></div>
+			You can now toggle between webm sizes with this checkbox.
+			<a class="privlink" href="//about.webm.website">Privacy & About</a></div>
 		{% if user %}
 			{% if '.' not in user %}
 			<div class="user">Hello, {{ user }}. (<a href="/settings/request-ban" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)</div>
@@ -354,5 +369,16 @@
 			} );
 		</script>
 		{% endif %}
+		<script>
+			function actualSize() {
+				if ( !document.getElementById( "js-fs" ).checked ) {
+					document.getElementById( "js-body" ).classList.add( "actualsize" );
+				} else {
+					document.getElementById( "js-body" ).classList.remove( "actualsize" );
+				}
+			}
+			document.getElementById( "js-fs" ).addEventListener( "change", actualSize );
+			actualSize();
+		</script>
 	</body>
 </html>
