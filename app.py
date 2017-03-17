@@ -730,7 +730,7 @@ if __name__ == '__main__':
         'webms/good',
         'webms/held',
         'webms/metadata',
-        'webms/music'
+        'webms/music',
         'webms/trash',
         'webms/veto',
     ]
