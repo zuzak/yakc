@@ -108,10 +108,13 @@ def ban_user():
 
 
 def user_banned():
-    bans = open('bans.txt').read().splitlines()
-    if get_ip() in bans:
-        return True
-    else:
+    try:
+        with open('bans.txt').read().splitlines() as bans:
+            if get_ip() in bans:
+                return True
+            else:
+                return False
+    except FileNotFoundError:
         return False
 
 
