@@ -281,7 +281,7 @@ def delete_holding_queue():
 @app.route('/', subdomain='privacy')
 def privacy():
     return render_template(
-        'privacypolicy.html',
+        'stats.html',
         stats=get_stats(),
      user=get_user())
 

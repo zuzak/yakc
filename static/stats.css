@@ -1,0 +1,16 @@
+.queue {
+	margin: 2em auto;
+
+}
+.counter { text-align: center;
+	font-size: 1em;
+	font-family: monospace;
+	white-space: nowrap;
+	float: right;
+	display: block;
+	margin: 1em;
+}
+
+body { color: #bbb; font-family: monospace; font-size: 1em; margin: 2em;}
+li { color: inherit; background: inherit; font: inherit; border: inherit; list-style-type: square; }
+
