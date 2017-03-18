@@ -8,6 +8,11 @@ window.onload = function () {
 var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
 	var queues = [ 'best', 'held', 'good', 'pending', 'bad', 'trash' ];
+	var div = document.createElement( 'div' );
+	div.className = 'delta';
+	div.id = 'delta';
+	div.innerHTML = 'Δ0';
+	body.appendChild(div);
 	for ( var i = 0; i < queues.length; i++  ) {
 		var queue = queues[i];
 		var div = document.createElement( 'div' );
@@ -52,6 +57,12 @@ var updateCounts = function ( data ) {
 		div.style['line-height'] = size;
 	}
 
+
+	div = document.getElementById( 'delta' );
+	div.innerHTML = data.delta;
+	if ( data.delta < 0 ) {
+		div.className = 'delta negative';
+	}
 	setTimeout(poll, 3000);
 }
 
