@@ -59,9 +59,13 @@ var updateCounts = function ( data ) {
 
 
 	div = document.getElementById( 'delta' );
-	div.innerHTML = data.delta;
+	div.innerHTML = 'Δ' + data.delta;
 	if ( data.delta < 0 ) {
 		div.className = 'delta negative';
+	} else if ( data.delta === 0 ) {
+		div.className = 'delta zero';
+	} else {
+		div.className = 'delta';
 	}
 	setTimeout(poll, 3000);
 }

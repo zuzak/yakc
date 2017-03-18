@@ -14,5 +14,6 @@
 body { color: #bbb; font-family: monospace; font-size: 1em; margin: 2em;}
 li { color: inherit; background: inherit; font: inherit; border: inherit; list-style-type: square; }
 
-.delta { color: lime; font-size: 2em; }
 .delta.negative { color: red; }
+.delta.zero { color: gray; }
+.delta { color: lime; font-size: 2em; }
