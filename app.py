@@ -11,11 +11,12 @@ import socket
 import subprocess
 import os
 from time import strftime
+from werkzeug.contrib.fixers import ProxyFix
 
 from raven.contrib.flask import Sentry
 
 app = Flask(__name__)
-sentry = Sentry(app)
+sentry = Sentry()
 
 
 delta = 0
@@ -741,6 +742,10 @@ def server_error(e):
         'error.html', e=e, sentry=g.sentry_event_id,
         dsn=sentry.client.get_public_dsn('https')), 500
 
+@app.route('/500')
+def force_exception():
+    raise Exception("Nothing to see here")
+
 if __name__ == '__main__':
 
     required_dirs = [
@@ -767,6 +772,9 @@ if __name__ == '__main__':
         }
     )
     app.config.from_envvar('WEBM_CONFIG')
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+
+    sentry.init_app(app)
 
     CORS(app)
 
