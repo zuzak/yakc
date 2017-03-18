@@ -65,9 +65,10 @@ def get_ip():
 def add_log(webm, action):
     global delta
     ip = get_user()
+    if ip != get_ip() and action != 'viewed':
+        with open('webms/metadata/' + webm, 'a') as logfile:
+            logfile.write(string + '\n')
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
-    with open('webms/metadata/' + webm, 'a') as logfile:
-        logfile.write(string + '\n')
     print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
@@ -761,7 +762,7 @@ if __name__ == '__main__':
     # probably should make this persist
     app.config.update(
         SECRET_KEY=uuid4().hex,
-        SERVER_NAME='webm.local',
+        SERVER_NAME='webm.website',
         TEMPLATES_AUTO_RELOAD=True,
         SENTRY_CONFIG={
             'release': git_version

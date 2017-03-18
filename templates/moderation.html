@@ -33,7 +33,7 @@
 			<!-- <input class="good right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto"> -->
 		{% endif %}
 		</div>
-			{% if unpromotable == 'cannot feature own videos' or unpromotable == 'you held this last time' %}
+			{% if unpromotable == 'cannot feature own videos' or unpromotable == 'you held this last time' or unpromotable == 'you must sign in to do this' %}
 			<input class="held" type="submit" title="[cannot hold: {{ unpromotable }}]" name="verdict" value="hold" disabled>
 			{% elif unpromotable == 'you demoted this before!'  %}
 				<input class="held" type="submit" title="[cannot hold: you tried to demote this video]" name="verdict" value="hold" disabled>
