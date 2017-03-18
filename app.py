@@ -66,10 +66,10 @@ def get_ip():
 def add_log(webm, action):
     global delta
     ip = get_user()
+    string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     if ip != get_ip() and action != 'viewed':
         with open('webms/metadata/' + webm, 'a') as logfile:
             logfile.write(string + '\n')
-    string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
