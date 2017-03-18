@@ -337,7 +337,7 @@ def show_webm(name, domain=None):
         token = generate_webm_token(name)
 
     return render_template(
-        'display.html',
+        'queues.html',
         webm=name,
         queue=queue,
         token=token,
@@ -364,12 +364,13 @@ def serve_random():
     if user_banned():
         return send_from_directory('webms', 'neil.jpg'), 403
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         token=generate_webm_token(webm),
         count=len(pending),
         history=get_log(webm),
         stats=get_stats(),
+        queue='pending',
         unpromotable=is_unpromotable(webm),
      user=get_user())
 
@@ -392,7 +393,7 @@ def serve_good():
     except IndexError:
         abort(404, 'You need to promote some webms!')
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         token=generate_webm_token(webm),
         queue='good',
@@ -428,7 +429,7 @@ def serve_unjudged_good():
         return redirect('/')
     else:
         return render_template(
-            'display.html',
+            'queues.html',
             webm=webm,
             token=generate_webm_token(webm),
             queue='good',
@@ -455,7 +456,7 @@ def serve_held():
     except IndexError:
         abort(404, 'There are no held webms.')
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         queue='decent',
         stats=get_stats(),
@@ -472,7 +473,7 @@ def serve_best():
         return redirect('/', 302)
     token = generate_webm_token(webm)
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         queue='best',
         token=token,
@@ -488,7 +489,7 @@ def serve_best_nocensor():
         abort(404, 'There are no featured webms.')
     token = generate_webm_token(webm)
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         queue='best',
         token=token,
@@ -505,7 +506,7 @@ def serve_music():
         abort(404, 'You need to shunt some videos!')
     token = generate_webm_token(webm)
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         queue='music',
         token=token,
@@ -527,7 +528,7 @@ def serve_bad():
     except IndexError:
         abort(404, 'No webms have been marked bad.')
     return render_template(
-        'display.html',
+        'queues.html',
         webm=webm,
         token=generate_webm_token(webm),
         queue='bad',
@@ -754,7 +755,7 @@ if __name__ == '__main__':
     # probably should make this persist
     app.config.update(
         SECRET_KEY=uuid4().hex,
-        SERVER_NAME='webm.website',
+        SERVER_NAME='webm.local',
         TEMPLATES_AUTO_RELOAD=True,
         SENTRY_CONFIG={
             'release': git_version

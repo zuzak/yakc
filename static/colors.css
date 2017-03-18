@@ -1,0 +1,24 @@
+.ugly, .pending {
+	background-color: #a520da; /* triad with goldenrod */
+	border-color: #a520da; /* triad with goldenrod */
+}
+.good {
+	background-color: #20daa5; /* triad with goldenrod */
+	border-color: #20daa5; /* triad with goldenrod */
+}
+.best {
+	background-color: goldenrod;
+	border-color: goldenrod;
+}
+.bad {
+	background-color: #da2055;
+	border-color: #da2055; /* complim. of good */
+}
+.music {
+	background-color: #1e90ff;
+	border-color: #1e90ff;
+}
+.held, .decent {
+	background-color: #55da20;
+	border-color: #55da20;
+}
