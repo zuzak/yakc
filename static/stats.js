@@ -1,9 +1,3 @@
-window.onload = function () {
-	getJSON('//api.webm.website/stats.json', function ( e, r ) {
-		createDivs( r );
-		updateCounts( r );
-	} );
-};
 
 var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
@@ -26,7 +20,7 @@ var createDivs = function ( data ) {
 
 		body.appendChild( div );
 
-		if ( queue == 'trash' ) {
+		if ( queue === 'trash' ) {
 			continue;
 		}
 		var span = document.createElement( 'span' );
@@ -79,3 +73,10 @@ var poll = function () {
 		updateCounts( r );
 	} );
 }
+
+window.onload = function () {
+	getJSON('//api.webm.website/stats.json', function ( e, r ) {
+		createDivs( r );
+		updateCounts( r );
+	} );
+};
