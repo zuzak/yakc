@@ -66,9 +66,10 @@ def get_ip():
 def add_log(webm, action):
     global delta
     ip = get_user()
+    if ip != get_ip() and action != 'viewed':
+        with open('webms/metadata/' + webm, 'a') as logfile:
+            logfile.write(string + '\n')
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
-    with open('webms/metadata/' + webm, 'a') as logfile:
-        logfile.write(string + '\n')
     print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
@@ -94,6 +95,9 @@ def set_user(ip, user):
         return False
 
     if any(substr in user for substr in blacklist):
+        return False
+
+    if user.startswith('94.119'):
         return False
 
     ips[ip] = user
@@ -151,6 +155,8 @@ def is_unpromotable(webm):
         return 'this shared IP address is banned'
     if user.startswith('('):
         return 'this shared IP address is banned'
+    if user == get_ip():
+        return 'you must sign in to do this'
     log = get_log(webm)
     if log is not None:
         log = log.split('\n')
