@@ -4,8 +4,8 @@
 		<title>webm website</title>
 		<meta name="robots" content="noindex, nofollow">
 		{% block css %}
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='colors.css') }}" />
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='queues.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='colors.css', _scheme='', _external=True) }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='queues.css', _scheme='', _external=True) }}" />
 		{% endblock %}
 	</head>
 	<body>
