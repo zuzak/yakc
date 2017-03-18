@@ -13,3 +13,12 @@ remove them from rotation and prevent them from being served.
 
 For MD5 lookup to work, you need to precompute the hashes.
 To do so, run `md5sum all/*.webm | tee md5.txt`.
+
+# Settings
+Run as *e.g.* `WEBM_CONFIG=settings.cfg python3 app.py`.
+
+Example settings file:
+```python
+SERVER_NAME="webm.website"
+DEBUG=False
+```
