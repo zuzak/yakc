@@ -1,5 +1,6 @@
 from flask import (Flask, send_from_directory, abort,
                    render_template, request, flash, redirect, g, jsonify)
+from flask_cors import CORS, cross_origin
 from random import choice, random
 from uuid import uuid4
 import json
@@ -65,10 +66,10 @@ def get_ip():
 def add_log(webm, action):
     global delta
     ip = get_user()
+    string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     if ip != get_ip() and action != 'viewed':
         with open('webms/metadata/' + webm, 'a') as logfile:
             logfile.write(string + '\n')
-    string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
 
 
@@ -723,6 +724,7 @@ def moderate_webm(domain=None):
 
 
 @app.route('/stats.json', subdomain='api')
+@cross_origin()
 def api():
     return jsonify(get_stats())
 
@@ -767,6 +769,8 @@ if __name__ == '__main__':
             'release': git_version
         }
     )
+
+    CORS(app)
 
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
