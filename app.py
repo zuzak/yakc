@@ -762,6 +762,9 @@ if __name__ == '__main__':
         }
     )
 
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
+
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.INFO)
 
