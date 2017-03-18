@@ -269,7 +269,8 @@ def get_stats():
             'trash': len(get_trash_webms()),
             'total': len(get_all_webms())
         },
-        'version': str(git_version)
+        'version': str(git_version),
+        'delta': delta
     }
 
 
