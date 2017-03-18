@@ -755,7 +755,7 @@ if __name__ == '__main__':
     # probably should make this persist
     app.config.update(
         SECRET_KEY=uuid4().hex,
-        SERVER_NAME='webm.local',
+        SERVER_NAME='webm.website',
         TEMPLATES_AUTO_RELOAD=True,
         SENTRY_CONFIG={
             'release': git_version
