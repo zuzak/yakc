@@ -760,13 +760,13 @@ if __name__ == '__main__':
             os.makedirs(directory)
 
     # probably should make this persist
-    app.config.from_envvar('WEBM_CONFIG')
     app.config.update(
         SECRET_KEY=uuid4().hex,
         SENTRY_CONFIG={
             'release': git_version
         }
     )
+    app.config.from_envvar('WEBM_CONFIG')
 
     CORS(app)
 
