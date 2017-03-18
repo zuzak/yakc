@@ -95,6 +95,9 @@ def set_user(ip, user):
     if any(substr in user for substr in blacklist):
         return False
 
+    if user.startswith('94.119'):
+        return False
+
     ips[ip] = user
 
     with open('addresses.json', 'w') as fp:
@@ -150,6 +153,8 @@ def is_unpromotable(webm):
         return 'this shared IP address is banned'
     if user.startswith('('):
         return 'this shared IP address is banned'
+    if user == get_ip():
+        return 'you must sign in to do this'
     log = get_log(webm)
     if log is not None:
         log = log.split('\n')
@@ -756,7 +761,7 @@ if __name__ == '__main__':
     # probably should make this persist
     app.config.update(
         SECRET_KEY=uuid4().hex,
-        SERVER_NAME='webm.website',
+        SERVER_NAME='webm.local',
         TEMPLATES_AUTO_RELOAD=True,
         SENTRY_CONFIG={
             'release': git_version
