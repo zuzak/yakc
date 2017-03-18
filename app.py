@@ -361,7 +361,6 @@ def serve_random():
         webm = choice(pending)
     except IndexError:
         abort(404, 'no webms to show!')
-        pass
     if user_banned():
         return send_from_directory('webms', 'neil.jpg'), 403
     return render_template(
@@ -642,24 +641,23 @@ def moderate_webm(domain=None):
 
     verdict = request.form['verdict']
 
-    status = None
     try:
         if verdict == 'good':
-            status = mark_good(webm)
+            mark_good(webm)
         elif verdict == 'bad':
-            status = mark_bad(webm)
+            mark_bad(webm)
         elif verdict == 'shunt':
             if webm in get_good_webms():
-                status = mark_music(webm)
+                mark_music(webm)
             else:
                 abort(400, 'can only shunt good webms')
         elif verdict == 'unshunt':
             if webm in get_music_webms():
-                status = unmark_music(webm)
+                unmark_music(webm)
             else:
                 abort(400, 'can only unshunt if shunted!')
         elif verdict == 'report':
-            status = mark_ugly(webm)
+            mark_ugly(webm)
         elif verdict == 'demote':
             if webm in get_good_webms():
                 unmark_good(webm)
