@@ -374,10 +374,10 @@
 
 			function changeSize(fullscreen) {
 				console.log('b', fullscreen);
-				if ( fullscreen === "true") {
-					document.getElementById( "js-body" ).classList.remove( "actualsize" );
-				} else {
+				if ( fullscreen === "false") {
 					document.getElementById( "js-body" ).classList.add( "actualsize" );
+				} else {
+					document.getElementById( "js-body" ).classList.remove( "actualsize" );
 				}
 			}
 
