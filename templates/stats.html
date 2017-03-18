@@ -1,50 +1,37 @@
-<!DOCTYPE html>
-<html> <head>
-		<title>webm website</title>
-		<meta name="robots" content="noindex, nofollow">
-		<style>
-
-			body {
-				background-color: #ccc;
-				/* disable this for centred, but actual size videos
-                   enable for full-screen but not-vcentred videos:  */
-				font-family:monospace;
-				height: 100%;
-				padding: 0;
-				position: absolute;
-				width: 80%;
-			}
-
-			
-		</style>
-	</head>
-	<body>
-		<h1>webm.website</h1>
-		<h2>Workflow</h2>
+{% extends 'skeleton.html' %}
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stats.css', _scheme='', _external=True) }}" />
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='stats.js', _scheme='', _external=True) }}"></script>
+{% endblock %}
+{% block body %}
+<div class="counter"></div>
 		<pre>
-                                   (personal whitelist)
-     best.webm.website ({{ stats.best }}) +--> top.webm.website
+                            (personal whitelist)
+     best.webm.website  +--> top.webm.website
            ^
-           | +-------> music.webm.website ({{ stats.music }})
+           | +-------> music.webm.website
    feature | |shunt
-           | |     +-+----> held.webm.website ({{ stats.held }})
-           + |     v |hold       
-   decent.webm.website ({{ stats.good }})
+           | |     +-+----> held.webm.website
+           + |     v |hold
+   decent.webm.website ()
            ^        +
       good |        | demote
            |        |
            +        v
-       webm.website ({{ stats.pending }}) <=====+ START
+       webm.website () <=====+ START
            ^        +
    forgive |        | bad
            |        |
            +        v
-	  bad.webm.website ({{ stats.bad }})
+    	  bad.webm.website
                     +
                     | report
                     |
                     v
-  [removed from public view] ({{ stats.trash }})
+  [removed from public view] 
 		</pre>
 
 
@@ -74,38 +61,22 @@
 			<li>Patches and issues welcome: https://github.com/zuzak/yakc</li>
 			<li>API available at http://api.webm.website/stats.json</li>
 		</ul>
-		<pre>
+		<p>
 
-		Copyright (c) 2016, Douglas Gardner douglas@chippy.ch
+		<p>Copyright (c) 2016, Douglas Gardner douglas@chippy.ch</p>
 
-		Permission to use, copy, modify, and/or distribute this software for any
+		<p>Permission to use, copy, modify, and/or distribute this software for any
 		purpose with or without fee is hereby granted, provided that the above
-		copyright notice and this permission notice appear in all copies.
+		copyright notice and this permission notice appear in all copies.</p>
 
-		THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+		<p>THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
 		REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
 		FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
 		INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 		LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 		OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-		PERFORMANCE OF THIS SOFTWARE.
+		PERFORMANCE OF THIS SOFTWARE.</p>
 
-		A product of the Zuzakistan Common Agricultural Policy
+		<p>A product of the Zuzakistan Common Agricultural Policy</p>
 
-		</pre>
-{% if debug %}
-<pre class="debug">{{debug}}</pre>
-{% endif %}
-		<script>
-<!-- rip your privacies -->
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-20878451-6', 'auto');
-    ga('send', 'pageview');
-
-		</script>
-	</body>
-</html>
+{% endblock %}
