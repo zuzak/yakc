@@ -155,8 +155,6 @@ def is_unpromotable(webm):
         return 'this shared IP address is banned'
     if user.startswith('('):
         return 'this shared IP address is banned'
-    if user == get_ip():
-        return 'you must sign in to do this'
     log = get_log(webm)
     if log is not None:
         log = log.split('\n')
