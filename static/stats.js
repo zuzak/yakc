@@ -3,7 +3,7 @@ window.onload = function () {
 		createDivs( r );
 		updateCounts( r );
 	} );
-}
+};
 
 var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
@@ -16,17 +16,21 @@ var createDivs = function ( data ) {
 	for ( var i = 0; i < queues.length; i++  ) {
 		var queue = queues[i];
 		var div = document.createElement( 'div' );
-		if ( queue == 'total' ) continue;
+		if ( queue == 'total' ) {
+			continue;
+		}
 
-		div.className = 'queue ' + queue
+		div.className = 'queue ' + queue;
 		div.id = queue;
 		div.innerHTML = queue;
 
 		body.appendChild( div );
 
-		if ( queue == 'trash' ) continue;
+		if ( queue == 'trash' ) {
+			continue;
+		}
 		var span = document.createElement( 'span' );
-		span.innerHTML = '&#x2195;'
+		span.innerHTML = '&#x2195;';
 		body.appendChild( span );
 	}
 }
@@ -49,9 +53,9 @@ var getJSON = function(url, callback) {
 var updateCounts = function ( data ) {
 	for ( var queue in data.counts ) {
 		var div = document.getElementById( queue );
-		if ( !div ) continue;
+		if ( !div ) { continue; }
 		div.innerHTML = data.counts[queue] + ' ' + queue;
-		var size = 0.5 * Math.sqrt(data.counts[queue]) + "em";
+		var size = 0.5 * Math.sqrt(data.counts[queue]) + 'em';
 		div.style.height = size;
 		div.style.width = size;
 		div.style['line-height'] = size;

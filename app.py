@@ -742,6 +742,7 @@ def server_error(e):
         'error.html', e=e, sentry=g.sentry_event_id,
         dsn=sentry.client.get_public_dsn('https')), 500
 
+
 @app.route('/500')
 def force_exception():
     raise Exception("Nothing to see here")
