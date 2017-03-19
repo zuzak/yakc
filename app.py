@@ -362,7 +362,7 @@ def serve_md5(md5):
 
 @app.route('/', subdomain='pending')
 @app.route('/')
-def serve_random():
+def queue_pending():
     try:
         pending = get_pending_webms()
         webm = choice(pending)
@@ -383,7 +383,7 @@ def serve_random():
 
 
 @app.route('/', subdomain='decent')
-def serve_good():
+def queue_good():
     global delta
     best = None
     held = 0
@@ -456,7 +456,7 @@ def redirect_to_held():
 
 
 @app.route('/', subdomain='held')
-def serve_held():
+def queue_held():
     try:
         good = get_held_webms()
         webm = choice(good)
@@ -471,7 +471,7 @@ def serve_held():
 
 
 @app.route('/', subdomain='best')
-def serve_best():
+def queue_best():
     try:
         webm = choice(get_best_webms())
     except IndexError:
@@ -489,7 +489,7 @@ def serve_best():
 
 
 @app.route('/', subdomain='top')
-def serve_best_nocensor():
+def queue_top():
     try:
         webm = choice(get_best_webms())
     except IndexError:
@@ -505,7 +505,7 @@ def serve_best_nocensor():
 
 
 @app.route('/', subdomain='music')
-def serve_music():
+def queue_music():
     try:
         webms = get_music_webms()
         webm = choice(webms)
@@ -528,7 +528,7 @@ def serve_best_index():
 
 
 @app.route('/', subdomain='bad')
-def serve_bad():
+def queue_bad():
     try:
         webms = get_bad_webms()
         webm = choice(webms)

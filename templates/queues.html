@@ -3,7 +3,7 @@
 	<div class="content {{ queue }}" id="js-body">
 		<div class="bottom-right">
 			<div class="grey-box">
-				<a class="privlink" href="//about.webm.website">Privacy & About</a>
+				<a class="privlink" href="{{ url_for('privacy') }}">Privacy & About</a>
 				{% include'news.html' %}
 			</div>
 			<div class="grey-box">
@@ -17,9 +17,9 @@
 			<div class="bottom-left">
 				<div class="grey-box">
 					{% if '.' not in user %}
-						Hello, {{ user }}. (<a href="/settings/request-ban" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)
+					Hello, {{ user }}. (<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)
 					{% else %}
-						<form action="/settings/change-nick" method="POST">
+						<form action="{{ url_for('change_nick') }}" method="POST">
 							<label for="nick">What's your name?</label>
 							<input required type="text" placeholder="{{ user }}" id="nick" name="nick" />
 							<input type="submit" value="Sign in" />
@@ -29,7 +29,7 @@
 			</div>
 		{% endif %}
 
-		<a href="/{{webm}}">
+		<a href="{{ url_for('show_webm', name='.'.join(webm.split('.')[:1])) }}">
 		<video id="js-video" autoplay controls loop>
 			<source src="/{{ webm }}">
 		</video>
@@ -42,8 +42,8 @@
 				<li class="stats">
 					<!--
 					{% for stat in stats.counts %}
-						{% if stat != 'total' %}
-					--><a title="{{ stats.counts[stat]}} {{ stat }} videos" style="width:{{ 100*(stats.counts[stat] / stats.counts.total)}}%" class="stat {{stat}}" href="//{{stat}}.webm.website">&nbsp;</a><!--
+						{% if stat != 'total' and stat != 'trash' %}
+					--><a title="{{ stats.counts[stat]}} {{ stat }} videos" style="width:{{ 100*(stats.counts[stat] / stats.counts.total)}}%" class="stat {{stat}}" href="{{ url_for( 'queue_' + stat ) }}">&nbsp;</a><!--
 						{% endif %}
 					{% endfor %}
 					-->

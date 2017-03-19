@@ -1,4 +1,4 @@
-<form id="moderation" action="/moderate" method="POST">
+<form id="moderation" action="{{ url_for('moderate_webm') }}" method="POST">
 {% if token %}
 	<input type="hidden" name="token" value="{{ token }}">
 	<input type="hidden" name="webm" value="{{ webm }}">
