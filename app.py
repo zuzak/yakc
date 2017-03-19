@@ -379,7 +379,6 @@ def queue_pending():
 
 @app.route('/', subdomain='decent')
 def queue_good():
-    global delta
     best = None
     held = 0
     try:
