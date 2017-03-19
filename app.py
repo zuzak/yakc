@@ -39,7 +39,7 @@ def get_ips():
 
 
 git_version = subprocess.check_output(
-    ['git', 'describe', '--long'])[:-1].decode('utf-8')
+    ['git', 'describe', '--all', '--long'])[:-1].decode('utf-8')
 
 
 def md5_to_file(md5):
