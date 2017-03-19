@@ -4,7 +4,6 @@ from flask_cors import CORS, cross_origin
 from random import choice, random
 from uuid import uuid4
 import json
-import logging
 from hashlib import sha256
 import shutil
 import socket
@@ -56,7 +55,7 @@ def md5_to_file(md5):
 
 
 def get_ip():
-    if (request.environ.get('HTTP_X_REAL_IP')):
+    if request.environ.get('HTTP_X_REAL_IP'):
         return request.environ.get('HTTP_X_REAL_IP')
     elif request.environ.get('X-Forwarded-For'):
         return request.environ.get('X-Forwarded-For')
@@ -65,7 +64,6 @@ def get_ip():
 
 
 def add_log(webm, action):
-    global delta
     ip = get_user()
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
     if ip != get_ip() and action != 'viewed':
@@ -118,10 +116,7 @@ def user_banned():
         with open('bans.txt') as text:
             bans = text.read().splitlines()
 
-            if get_ip() in bans:
-                return True
-            else:
-                return False
+            return bool(get_ip() in bans)
     except FileNotFoundError:
         return False
 
@@ -295,7 +290,7 @@ def privacy():
 
 @app.route('/<name>.webm')
 @app.route('/<name>.webm', subdomain='<domain>')
-def serve_webm(name, domain=None):
+def serve_webm(name):
     if request.accept_mimetypes.best_match(
             ['video/webm', 'text/html']) == 'text/html':
         return redirect(name)
@@ -321,7 +316,7 @@ def metadata_exists(webm):
 
 @app.route('/<name>', subdomain='<domain>')
 @app.route('/<name>')
-def show_webm(name, domain=None):
+def show_webm(name):
     name = name + '.webm'
     queue = 'pending'
     token = None
@@ -641,10 +636,10 @@ def change_nick():
 
 @app.route('/moderate', methods=['POST'])
 @app.route('/moderate', methods=['POST'], subdomain='<domain>')
-def moderate_webm(domain=None):
+def moderate_webm():
     webm = request.form['webm']
     token = request.form['token'].split(':')
-    if not (token[0] + ':' + token[1] == generate_webm_token(webm, token[1])):
+    if not token[0] + ':' + token[1] == generate_webm_token(webm, token[1]):
         abort(400, 'token mismatch')
 
     verdict = request.form['verdict']

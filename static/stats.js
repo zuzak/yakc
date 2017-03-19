@@ -10,7 +10,7 @@ var createDivs = function ( data ) {
 	for ( var i = 0; i < queues.length; i++  ) {
 		var queue = queues[i];
 		var div = document.createElement( 'div' );
-		if ( queue == 'total' ) {
+		if ( queue === 'total' ) {
 			continue;
 		}
 
@@ -27,7 +27,7 @@ var createDivs = function ( data ) {
 		span.innerHTML = '&#x2195;';
 		body.appendChild( span );
 	}
-}
+};
 var getJSON = function(url, callback) {
 	// http://stackoverflow.com/a/35970894
     var xhr = new XMLHttpRequest();
@@ -35,7 +35,7 @@ var getJSON = function(url, callback) {
     xhr.responseType = 'json';
     xhr.onload = function() {
       var status = xhr.status;
-      if (status == 200) {
+      if (status === 200) {
         callback(null, xhr.response);
       } else {
         callback(status);
@@ -46,13 +46,15 @@ var getJSON = function(url, callback) {
 
 var updateCounts = function ( data ) {
 	for ( var queue in data.counts ) {
-		var div = document.getElementById( queue );
-		if ( !div ) { continue; }
-		div.innerHTML = data.counts[queue] + ' ' + queue;
-		var size = 0.5 * Math.sqrt(data.counts[queue]) + 'em';
-		div.style.height = size;
-		div.style.width = size;
-		div.style['line-height'] = size;
+		if ( data.counts.hasOwnProperty( queue ) ) {
+			var div = document.getElementById( queue );
+			if ( !div ) { continue; }
+			div.innerHTML = data.counts[queue] + ' ' + queue;
+			var size = 0.5 * Math.sqrt(data.counts[queue]) + 'em';
+			div.style.height = size;
+			div.style.width = size;
+			div.style['line-height'] = size;
+		}
 	}
 
 

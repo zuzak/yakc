@@ -2,7 +2,6 @@
 import os
 import hashlib
 from time import strftime
-import sys
 
 hashes = dict()
 FN = 'all'
