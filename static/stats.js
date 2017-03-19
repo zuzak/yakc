@@ -1,4 +1,4 @@
-
+/* jslint browser: true */
 var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
 	var queues = [ 'best', 'held', 'good', 'pending', 'bad', 'trash' ];
@@ -74,11 +74,11 @@ var getJSON = function(url, callback) {
 };
 
 
-var poll = function () {
+function poll() {
 	getJSON('//api.webm.website/stats.json', function ( e, r ) {
 		updateCounts( r );
 	} );
-}
+};
 
 window.onload = function () {
 	getJSON('//api.webm.website/stats.json', function ( e, r ) {
