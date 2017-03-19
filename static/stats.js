@@ -78,7 +78,7 @@ function poll() {
 	getJSON('//api.webm.website/stats.json', function ( e, r ) {
 		updateCounts( r );
 	} );
-};
+}
 
 window.onload = function () {
 	getJSON('//api.webm.website/stats.json', function ( e, r ) {
