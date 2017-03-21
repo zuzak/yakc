@@ -3,7 +3,7 @@
 	<div class="content {{ queue }}" id="js-body">
 		<div class="bottom-right">
 			<div class="grey-box">
-				<a class="privlink" href="{{ url_for('privacy') }}">Privacy & About</a>
+				<a class="privlink" href="{{ url_for('about') }}">Privacy & About</a>
 				{% include'news.html' %}
 			</div>
 			<div class="grey-box">
@@ -52,7 +52,9 @@
 			{% endif %}
 			{% if count %}
 				<li>
-					{{ count }} {{ queue }} videos
+					<a href="{{ url_for('about') }} ">
+						{{ count }} {{ queue }} videos
+					</a>
 				</li>
 			{% endif %}
 			{% with messages = get_flashed_messages() %}

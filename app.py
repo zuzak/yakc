@@ -280,8 +280,7 @@ def delete_holding_queue():
 
 
 @app.route('/', subdomain='about')
-@app.route('/', subdomain='privacy')
-def privacy():
+def about():
     return render_template(
         'stats.html',
         stats=get_stats(),
