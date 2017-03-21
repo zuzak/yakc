@@ -290,7 +290,7 @@ def privacy():
 
 @app.route('/<name>.webm')
 @app.route('/<name>.webm', subdomain='<domain>')
-def serve_webm(name):
+def serve_webm(name, domain=None):
     if request.accept_mimetypes.best_match(
             ['video/webm', 'text/html']) == 'text/html':
         return redirect(name)
@@ -316,7 +316,7 @@ def metadata_exists(webm):
 
 @app.route('/<name>', subdomain='<domain>')
 @app.route('/<name>')
-def show_webm(name):
+def show_webm(name, domain=None):
     name = name + '.webm'
     queue = 'pending'
     token = None
@@ -635,7 +635,7 @@ def change_nick():
 
 @app.route('/moderate', methods=['POST'])
 @app.route('/moderate', methods=['POST'], subdomain='<domain>')
-def moderate_webm():
+def moderate_webm(domain=None):
     webm = request.form['webm']
     token = request.form['token'].split(':')
     if not token[0] + ':' + token[1] == generate_webm_token(webm, token[1]):
