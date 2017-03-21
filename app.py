@@ -337,6 +337,8 @@ def show_webm(name, domain=None):
         queue = 'bad'
         token = generate_webm_token(name)
 
+    add_log(name, 'viewed directly')
+
     return render_template(
         'queues.html',
         webm=name,
