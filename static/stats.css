@@ -11,9 +11,9 @@
 	margin: 1em;
 }
 
-body { color: #bbb; font-family: monospace; font-size: 1em; margin: 2em;}
+body { color: #bbb; font-family: monospace; font-size: 1em; max-width: 979px; margin: auto;}
 li { color: inherit; background: inherit; font: inherit; border: inherit; list-style-type: square; }
 
-.delta.negative { color: red; }
-.delta.zero { color: gray; }
-.delta { color: lime; font-size: 2em; }
+.delta.negative { color: #00bfff; }
+.delta.zero { color: #ff00bf; }
+.delta { color: #bfff00; font-size: 2em; }
