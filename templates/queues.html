@@ -7,7 +7,6 @@
 				{% include'news.html' %}
 			</div>
 			<div class="grey-box">
-				<progress id="js-progress" min="0"></progress>
 				<form class="fs-toggle">
 					<input type="checkbox" id="js-fs" />
 					<label for="js-fs">Stretch webms to fill screen</label>
@@ -15,34 +14,38 @@
 			</div>
 		</div>
 		{% if user %}
-			<div class="bottom-left">
-				<div class="grey-box">
-					{% if '.' not in user %}
-					Hello, {{ user }}. (<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)
-					{% else %}
-						<form action="{{ url_for('change_nick') }}" method="POST">
-							<label for="nick">What's your name?</label>
-							<input required type="text" placeholder="{{ user }}" id="nick" name="nick" />
-							<input type="submit" value="Sign in" />
-						</form>
-					{% endif %}
-				</div>
+		<div class="bottom-left">
+			<div class="grey-box">
+				{% if '.' not in user %}
+				<!--Hello, {{ user }}. -->
+				(<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)
+				{% else %}
+					<form action="{{ url_for('change_nick') }}" method="POST">
+						<label for="nick">What's your name?</label>
+						<input required type="text" placeholder="{{ user }}" id="nick" name="nick" />
+						<input type="submit" value="Sign in" />
+					</form>
+				{% endif %}
 			</div>
+		</div>
 		{% endif %}
 
 		{% if not direct %}
 		<a href="{{ url_for('show_webm', name='.'.join(webm.split('.')[:1])) }}">
 			<video id="js-video" autoplay loop>
-			<source src="/{{ webm }}">
+				<source src="/{{ webm }}">
 			</video>
 		</a>
 	  	{% else %}
 		<span>
-		<video id="js-video" autoplay controls loop>
-			<source src="/{{ webm }}">
-		</video>
+			<video id="js-video" autoplay controls loop>
+				<source src="/{{ webm }}">
+			</video>
 		</span>
 		{% endif %}
+		<div class="top-right">
+			<progress id="js-progress" min="0"></progress>
+		</div>
 		{% if not domain %}
 		<div class="top-left">
 			{% include 'moderation.html' %}
@@ -69,7 +72,7 @@
 			{% with messages = get_flashed_messages() %}
 				{% if messages %}
 					{% for message in messages %}
-						<li>{{ message }}</li>
+				<li>{{ message }}</li>
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
@@ -116,8 +119,10 @@
 			console.log('b', fullscreen);
 			if ( fullscreen === "false") {
 				document.getElementById( "js-body" ).classList.add( "actualsize" );
+				ga('send', 'event', 'actual size toggle', 'on');
 			} else {
 				document.getElementById( "js-body" ).classList.remove( "actualsize" );
+				ga('send', 'event', 'actual size toggle', 'off');
 			}
 		}
 
@@ -137,7 +142,15 @@
 			progress.setAttribute( 'max', video.duration );
 		} );
 
+		video.addEventListener( 'dataloaded', function () {
+			progress.setAttribute( 'max', video.duration );
+		} );
+
+		video.addEventListener( 'metadataloaded', function () {
+		} );
+
 		video.addEventListener( 'timeupdate', function () {
+			progress.setAttribute( 'max', video.duration );
 			progress.value = video.currentTime;
 		} );
 	</script>
