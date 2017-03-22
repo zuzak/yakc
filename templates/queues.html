@@ -7,6 +7,7 @@
 				{% include'news.html' %}
 			</div>
 			<div class="grey-box">
+				<progress id="js-progress" min="0"></progress>
 				<form class="fs-toggle">
 					<input type="checkbox" id="js-fs" />
 					<label for="js-fs">Stretch webms to fill screen</label>
@@ -127,5 +128,17 @@
 			document.getElementById( 'js-fs' ).checked = true;
 		}
 		changeSize(fs);
+	</script>
+	<script>
+		var progress = document.getElementById( 'js-progress' );
+		var video = document.getElementById( 'js-video' );
+
+		video.addEventListener( 'durationchange', function () {
+			progress.setAttribute( 'max', video.duration );
+		} );
+
+		video.addEventListener( 'timeupdate', function () {
+			progress.value = video.currentTime;
+		} );
 	</script>
 {% endblock %}
