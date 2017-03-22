@@ -1,5 +1,5 @@
-<form id="moderation" action="/moderate" method="POST">
 {% if token %}
+<form id="moderation" action="/moderate" method="POST">
 	<input type="hidden" name="token" value="{{ token }}">
 	<input type="hidden" name="webm" value="{{ webm }}">
 
@@ -60,5 +60,5 @@
 		<input class="best" type="submit" title="This video doesn't deserve to be here (downvote)" name="verdict" value="censure">
 		{% endif %}
 	{% endif %}
-{% endif %}
 </form>
+{% endif %}

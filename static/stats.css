@@ -11,6 +11,17 @@
 	margin: 1em;
 }
 
+.queue {
+	margin: 1em;
+	display: inline-block;
+}
+.counter .sep {
+	display: block;
+}
+.counter span {
+	font-size: 2em;
+}
+
 body { color: #bbb; font-family: monospace; font-size: 1em; max-width: 979px; margin: auto;}
 li { color: inherit; background: inherit; font: inherit; border: inherit; list-style-type: square; }
 

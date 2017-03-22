@@ -69,7 +69,9 @@ def add_log(webm, action):
     if ip != get_ip() and action != 'viewed':
         with open('webms/metadata/' + webm, 'a') as logfile:
             logfile.write(string + '\n')
-    print(str(delta) + ' ' + string + ' http://webm.website/' + webm)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    string = ip + " " + action + ' http://webm.website/' + webm
+    sock.sendto(string.encode(), ('saraneth.lon.fluv.net', 41339))
 
 
 def get_user():
@@ -344,6 +346,7 @@ def show_webm(name, domain=None):
         webm=name,
         queue=queue,
         token=token,
+        direct=True,
      history=get_log(name))
 
 

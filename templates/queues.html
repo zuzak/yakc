@@ -29,11 +29,19 @@
 			</div>
 		{% endif %}
 
+		{% if not direct %}
 		<a href="{{ url_for('show_webm', name='.'.join(webm.split('.')[:1])) }}">
+			<video id="js-video" autoplay loop>
+			<source src="/{{ webm }}">
+			</video>
+		</a>
+	  	{% else %}
+		<span>
 		<video id="js-video" autoplay controls loop>
 			<source src="/{{ webm }}">
 		</video>
-		</a>
+		</span>
+		{% endif %}
 		{% if not domain %}
 		<div class="top-left">
 			{% include 'moderation.html' %}

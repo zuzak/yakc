@@ -39,6 +39,11 @@ li {
 	margin:2px auto;
 	padding: 3px;
 }
+li a {
+	display: block;
+	color: inherit;
+	text-decoration: inherit;
+}
 .top-left {
 	left: 1em;
 	position: fixed;
