@@ -6,7 +6,7 @@ var createDivs = function ( data ) {
 		[ 'held', 'good', 'music' ],
 		[ 'pending' ],
 		[ 'bad' ],
-	    ['trash' ]
+		['trash' ]
 	];
 
 	var delta = document.createElement( 'div' );
@@ -30,10 +30,10 @@ var createDivs = function ( data ) {
 			body.appendChild( div );
 
 			if ( j < queues[i].length - 1) {
-				var span = document.createElement( 'span' );
-				span.class = 'sep'
-				span.innerHTML = '&#x21c6'; //'&#x2194;';
-				body.appendChild( span );
+				var sep = document.createElement( 'span' );
+				sep.class = 'sep';
+				sep.innerHTML = '&#x21c6'; //'&#x2194;';
+				body.appendChild( sep );
 			}
 
 			if ( queue === 'trash' ) {
@@ -41,12 +41,12 @@ var createDivs = function ( data ) {
 			}
 		}
 		var span = document.createElement( 'span' );
-		span.className = 'sep'
-		if ( i == queue.length ) {
+		span.className = 'sep';
+		if ( i === queue.length ) {
 			span.innerHTML = '&#x2193;'; // downwards
-		} else if ( i == queue.length - 1) {
+		} else if ( i === queue.length - 1) {
 			continue;
-		} else if ( i == 0 ) {
+		} else if ( i === 0 ) {
 			span.innerHTML = '&#x2191;'; // upwards
 		} else {
 			span.innerHTML = '&#x21f5'; //'&#x2195;'; //  updown
