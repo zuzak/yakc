@@ -414,7 +414,6 @@ def queue_good():
 
 @app.route('/', subdomain='new.decent')
 def serve_unjudged_good():
-    global delta
     best = None
     held = 0
     try:
