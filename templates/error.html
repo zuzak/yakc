@@ -56,6 +56,10 @@
 					<p>{{ er }}</p>
 				{% endfor %}
 			{% endfor %}
+			{% if e.description === 'token mismatch' %}
+			<p>This is usually because of a software update while you were viewing that webm.</p>
+			<p>For security reasons, we don't let you carry votes in progress across software versions.</p>
+			{% endif %}
 		{% else %}
 			<h1>Internal Server Error</h1>
 			{% if sentry %}
