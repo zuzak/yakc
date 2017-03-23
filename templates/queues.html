@@ -6,7 +6,7 @@
 				<a class="privlink" href="{{ url_for('about') }}">Privacy & About</a>
 				<a class="privlink" href="//github.com/zuzak/yakc/issues/new">Report problem</a>
 				{% include'news.html' %}
-				{{% if stats %} {{ stats.version }} {% endif %}
+				{% if stats %} {{ stats.version }} {% endif %}
 			</div>
 			<div class="grey-box">
 				<form class="fs-toggle">
@@ -20,7 +20,7 @@
 			<div class="grey-box">
 				{% if '.' not in user %}
 				<!--Hello, {{ user }}. -->
-				(<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">Ban yourself</a>)
+				<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">🚮 Ban</a>
 				{% else %}
 					<form action="{{ url_for('change_nick') }}" method="POST">
 						<label for="nick">What's your name?</label>
