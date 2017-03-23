@@ -1,28 +1,33 @@
 .ugly, .pending {
-	background-color: #a520da; /* triad with goldenrod */
-	border-color: #a520da; /* triad with goldenrod */
+	background-color: #844d9e;
+	border-color: #844d9e;
+	color: white;
 }
-.decent {
-	background-color: #20daa5; /* triad with goldenrod */
-	border-color: #20daa5; /* triad with goldenrod */
+.decent, .good {
+	background-color: #56b949;
+	border-color: #56b949;
+	color: white;
 }
 .best {
-	background-color: goldenrod;
-	border-color: goldenrod;
+	background-color: #f3a530;
+	border-color: #f3a530;
+	color: white;
 }
 .bad {
-	background-color: #da2055;
-	border-color: #da2055; /* complim. of good */
+	background-color: #ee4035;
+	border-color: #ee4035;
+	color: white;
 }
 .music {
-	background-color: #1e90ff;
-	border-color: #1e90ff;
+	background-color: #30499b;
+	border-color: #30499b;
+	color: white;
 }
 .held {
-	background-color: #2fffff; /* #20daa5 minus #daa520 */
-	border-color: #2fffff;
+	background-color: #f9ed3a; /* #20daa5 minus #daa520 */
+	border-color: #f9ed3a; /* #20daa5 minus #daa520 */
+	color: white;
 }
 .trash {
 	background-color: black;
-	color: white;
 }

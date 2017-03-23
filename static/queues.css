@@ -141,11 +141,6 @@ li.stats {
 input {
 	margin: 5px;
 }
-input:disabled {
-	/* this probably looks terrible */
-	/* display: none; */
-	border-style: inset;
-}
 .clear {
 	clear:both;
 }
@@ -172,4 +167,14 @@ progress {
 }
 progress:indeterminate {
 	display: none;
+}
+
+.moderation input {
+	border-style: outset;
+}
+input:disabled {
+	/* this probably looks terrible */
+	/* display: none; */
+	border-style: inset;
+	color: gray;
 }
