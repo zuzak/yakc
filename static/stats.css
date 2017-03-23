@@ -28,3 +28,6 @@ li { color: inherit; background: inherit; font: inherit; border: inherit; list-s
 .delta.negative { color: #00bfff; }
 .delta.zero { color: #ff00bf; }
 .delta { color: #bfff00; font-size: 2em; }
+
+.queue a { color: inherit; text-decoration: none; display: block; }
+

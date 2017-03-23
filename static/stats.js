@@ -25,7 +25,6 @@ var createDivs = function ( data ) {
 
 			div.className = 'queue ' + queue;
 			div.id = queue;
-			div.innerHTML = queue;
 
 			body.appendChild( div );
 
@@ -60,7 +59,8 @@ var updateCounts = function ( data ) {
 		if ( data.counts.hasOwnProperty( queue ) ) {
 			div = document.getElementById( queue );
 			if ( !div ) { continue; }
-			div.innerHTML = data.counts[queue] + ' ' + queue;
+			var text = data.counts[queue] + ' ' + queue;
+			div.innerHTML = '<a href="//' + queue + '.webm.website">' + text + '</a>';
 			var size = 0.5 * Math.sqrt(data.counts[queue]) + 'em';
 			div.style.height = size;
 			div.style.width = size;
