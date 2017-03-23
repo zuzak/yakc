@@ -10,6 +10,7 @@
 	margin: 1em;
 	clear: both;
 	float: left;
+	font-size: 0.9em;
 }
 
 .queue {
@@ -32,9 +33,8 @@ li { color: inherit; background: inherit; font: inherit; border: inherit; list-s
 
 .queue a { color: inherit; text-decoration: none; display: block; }
 
-@media screen and (max-width: 930px) {
+@media screen and (max-width: 800px) {
 	.prose {
-		color: red !important;
 		clear: both;
 	}
 	.counter {
