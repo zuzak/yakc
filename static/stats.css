@@ -3,12 +3,13 @@
 
 }
 .counter { text-align: center;
-	font-size: 1em;
 	font-family: monospace;
 	white-space: nowrap;
-	float: right;
 	display: block;
+	font-size: 1em;
 	margin: 1em;
+	clear: both;
+	float: left;
 }
 
 .queue {
@@ -22,12 +23,22 @@
 	font-size: 2em;
 }
 
-body { color: #bbb; font-family: monospace; font-size: 1em; max-width: 979px; margin: auto;}
+body { color: #bbb; font-family: monospace; font-size: 1em;  margin: auto;}
 li { color: inherit; background: inherit; font: inherit; border: inherit; list-style-type: square; }
 
 .delta.negative { color: #00bfff; }
 .delta.zero { color: #ff00bf; }
-.delta { color: #bfff00; font-size: 2em; }
+.delta { color: #bfff00; font-size: 2em; float: left; }
 
 .queue a { color: inherit; text-decoration: none; display: block; }
 
+@media screen and (max-width: 930px) {
+	.prose {
+		color: red !important;
+		clear: both;
+	}
+	.counter {
+		text-align: center;
+		float: none;
+	}
+}

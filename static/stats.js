@@ -3,11 +3,17 @@ var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
 	var queues = [ 
 		[ 'best' ],
-		[ 'held', 'decent', 'music' ],
+		[ 'good', 'decent', 'music' ],
 		[ 'pending' ],
 		[ 'bad' ],
 		['trash' ]
 	];
+
+	var prog = document.createElement( 'progress' );
+	prog.className = 'progress';
+	prog.id = 'progress';
+	body.appendChild(prog);
+
 
 	var delta = document.createElement( 'div' );
 	delta.className = 'delta';
@@ -55,8 +61,13 @@ var createDivs = function ( data ) {
 };
 var updateCounts = function ( data ) {
 	var div;
+	var total = 0 - data.counts.pending - data.counts.total;
+	data.counts.good = data.counts.held
+	delete data.counts.held // deletes property from object
+
 	for ( var queue in data.counts ) {
 		if ( data.counts.hasOwnProperty( queue ) ) {
+			total += data.counts[queue];
 			div = document.getElementById( queue );
 			if ( !div ) { continue; }
 			var text = data.counts[queue] + ' ' + queue;
@@ -68,9 +79,13 @@ var updateCounts = function ( data ) {
 		}
 	}
 
+	var prog = document.getElementById( 'progress' );
+	prog.max = data.counts.total;
+	prog.value = total;
+
 
 	div = document.getElementById( 'delta' );
-	div.innerHTML = 'Δ' + data.delta;
+	div.innerHTML = 'Δ' + data.delta + ' ' + Math.round( 100 * total / data.counts.total ) + '%'
 	if ( data.delta < 0 ) {
 		div.className = 'delta negative';
 	} else if ( data.delta === 0 ) {

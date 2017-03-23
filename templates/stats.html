@@ -8,32 +8,18 @@
 {% endblock %}
 {% block body %}
 <div class="counter"></div>
-		<pre>
-                            (personal whitelist)
-     best.webm.website  +--> top.webm.website
-           ^
-           | +-------> music.webm.website
-   feature | |shunt
-           | |     +-+----> held.webm.website
-           + |     v |hold
-   decent.webm.website
-           ^        +
-      good |        | demote
-           |        |
-           +        v
-          webm.website <=====+ START
-           ^        +
-   forgive |        | bad
-           |        |
-           +        v
-    	  bad.webm.website
-                    +
-                    | report
-                    |
-                    v
-  [removed from public view] 
-		</pre>
+<div class="prose">
 
+		<h1>webm.website</h1>
+		<p>Welcome to webm.website, a crowd-sourced mildly addictive video quality sorter.</p>
+		<p>Videos start at pending.webm.website, and you can vote on videos at each stage.</p>
+		<p>A vote causes the webm to move to a different queue, and eventually really good videos will bubble up to best.webm.website.</p>
+
+		<h2>Guidelines</h2>
+		<p>Videos are pulled from a technically safe for work, but seedy, corner of the Internet.</p>
+		<p>As such videos are likely to be mostly SFW, but there may be exceptions.</p>
+		<p>Queues other than &#8220;best&#8221; might not be wholly SFW.</p>
+		<p>Please don't feature NSFW things; use the &#8220;nsfw&#8221; to veto suspect webms from reaching the top.</p>
 
 		<h2>Privacy policy</h2>
 		<ul>
@@ -78,5 +64,6 @@
 		PERFORMANCE OF THIS SOFTWARE.</p>
 
 		<p>A product of the Zuzakistan Common Agricultural Policy</p>
+</div>
 
 {% endblock %}

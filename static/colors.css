@@ -3,7 +3,7 @@
 	border-color: #844d9e;
 	color: white;
 }
-.decent, .good {
+.decent {
 	background-color: #56b949;
 	border-color: #56b949;
 	color: white;
@@ -23,7 +23,7 @@
 	border-color: #30499b;
 	color: white;
 }
-.held {
+.held, .good {
 	background-color: #f9ed3a; /* #20daa5 minus #daa520 */
 	border-color: #f9ed3a; /* #20daa5 minus #daa520 */
 	color: white;

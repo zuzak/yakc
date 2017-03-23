@@ -3,21 +3,21 @@
 	<div class="content {{ queue }}" id="js-body">
 		<div class="bottom-right">
 			<div class="grey-box">
-				<a class="privlink" href="{{ url_for('about') }}">Privacy & About</a>
-				<a class="privlink" href="//github.com/zuzak/yakc/issues/new">Report problem</a>
+				<a class="privlink hide-small" href="{{ url_for('about') }}">Privacy & About</a>
+				<a class="privlink hide-small" href="//github.com/zuzak/yakc/issues/new">Report problem</a>
 				{% include'news.html' %}
-				{% if stats %} {{ stats.version }} {% endif %}
+				{% if stats %} <span class="hide-small">{{ stats.version }}</span> {% endif %}
 			</div>
 			<div class="grey-box">
 				<form class="fs-toggle">
 					<input type="checkbox" id="js-fs" />
-					<label for="js-fs">Stretch webms to fill screen</label>
+					<label for="js-fs">Stretch webms <span class="hide-small">to fill screen</span></label>
 				</form>
 			</div>
 		</div>
 		{% if user %}
 		<div class="bottom-left">
-			<div class="grey-box">
+			<div class="grey-box hide-small">
 				{% if '.' not in user %}
 				<!--Hello, {{ user }}. -->
 				<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">🚮 Ban</a>
@@ -45,7 +45,7 @@
 			</video>
 		</span>
 		{% endif %}
-		<div class="top-right">
+		<div class="top-right hide-small">
 			<progress id="js-progress" min="0"></progress>
 		</div>
 		{% if not domain %}
@@ -65,7 +65,7 @@
 				</li>
 			{% endif %}
 			{% if count %}
-				<li>
+				<li class="hide-small">
 					<a href="{{ url_for('about') }} ">
 						{{ count }} {{ queue }} videos
 					</a>
@@ -79,7 +79,7 @@
 				{% endif %}
 			{% endwith %}
 			{% if held %}
-				<li> {{held}} held videos </li>
+				<li class="hide-small"> {{held}} held videos </li>
 			{% endif %}
 			</ul>
 		</div>
