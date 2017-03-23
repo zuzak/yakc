@@ -84,7 +84,8 @@ def set_user(ip, user):
     ips = get_ips()
     blacklist = [
         ' ',
-        'good',
+        'decent',
+        'decent',
         'demote',
         'held',
         'censure',
@@ -158,7 +159,9 @@ def is_unpromotable(webm):
         log = log.split('\n')
         for line in log:
             if user in line:
-                if 'marked good' in line:
+                if 'marked decent' in line:
+                    return 'cannot feature own videos'
+                if 'marked decent' in line:
                     return 'cannot feature own videos'
                 if 'demoted' in line:
                     return 'you demoted this before!'
@@ -174,7 +177,7 @@ def is_votable(webm):
         log = log.split('\n')
         for line in log:
             if user in line:
-                if 'marked good' in line:
+                if 'marked decent' in line:
                     return 'cannot feature own videos'
                 if 'demoted' in line:
                     return 'you demoted this before!'
@@ -212,8 +215,8 @@ def get_all_webms():
     return os.listdir('webms/all')
 
 
-def get_good_webms():
-    return os.listdir('webms/good')
+def get_decent_webms():
+    return os.listdir('webms/decent')
 
 
 def get_music_webms():
@@ -238,11 +241,11 @@ def get_safe_webms():
 
 def get_quality_webms():
     """Allows whitelisting of reports to stop the top-tier webms being 403'd"""
-    return list(set(get_good_webms()).union(get_best_webms()))
+    return list(set(get_decent_webms()).union(get_best_webms()))
 
 
 def get_pending_webms():
-    return list(set(get_safe_webms()) - set(get_good_webms()) -
+    return list(set(get_safe_webms()) - set(get_decent_webms()) -
                 set(get_bad_webms()) - set(get_music_webms()))
 
 
@@ -254,15 +257,15 @@ def get_held_webms():
     return os.listdir('webms/held')
 
 
-def get_unheld_good_webms():
-    return list(set(get_good_webms()) - set(get_held_webms()))
+def get_unheld_decent_webms():
+    return list(set(get_decent_webms()) - set(get_held_webms()))
 
 
 def get_stats():
     best = len(get_best_webms())
     return {
         'counts': {
-            'good': (len(get_good_webms()) - best),
+            'decent': (len(get_decent_webms()) - best),
             'bad': len(get_bad_webms()),
             'music': len(get_music_webms()),
             'held': len(get_held_webms()),
@@ -333,8 +336,8 @@ def show_webm(name, domain=None):
         queue = 'best'
     elif name in get_music_webms():
         queue = 'music'
-    elif name in get_good_webms():
-        queue = 'good'
+    elif name in get_decent_webms():
+        queue = 'decent'
     elif name in get_bad_webms():
         queue = 'bad'
         token = generate_webm_token(name)
@@ -382,17 +385,17 @@ def queue_pending():
 
 
 @app.route('/', subdomain='decent')
-def queue_good():
+def queue_decent():
     best = None
     held = 0
     try:
-        good = get_unheld_good_webms()
-        if len(good) == 0:
+        decent = get_unheld_decent_webms()
+        if len(decent) == 0:
             delete_holding_queue()
-            good = get_unheld_good_webms()
+            decent = get_unheld_decent_webms()
         else:
             held = len(get_held_webms())
-        webm = choice(good)
+        webm = choice(decent)
         if webm in get_best_webms():
             best = True
     except IndexError:
@@ -401,8 +404,8 @@ def queue_good():
         'queues.html',
         webm=webm,
         token=generate_webm_token(webm),
-        queue='good',
-        count=len(good),
+        queue='decent',
+        count=len(decent),
         best=best,
         held=held,
         unpromotable=is_unpromotable(webm),
@@ -413,17 +416,17 @@ def queue_good():
 
 
 @app.route('/', subdomain='new.decent')
-def serve_unjudged_good():
+def serve_unjudged_decent():
     best = None
     held = 0
     try:
-        good = get_unheld_good_webms()
-        if len(good) == 0:
+        decent = get_unheld_decent_webms()
+        if len(decent) == 0:
             delete_holding_queue()
-            good = get_unheld_good_webms()
+            decent = get_unheld_decent_webms()
         else:
             held = len(get_held_webms())
-        webm = choice(good)
+        webm = choice(decent)
         if webm in get_best_webms():
             best = True
     except IndexError:
@@ -436,8 +439,8 @@ def serve_unjudged_good():
             'queues.html',
             webm=webm,
             token=generate_webm_token(webm),
-            queue='good',
-            count=len(good),
+            queue='decent',
+            count=len(decent),
             best=best,
             held=held,
             unpromotable=is_unpromotable(webm),
@@ -449,20 +452,20 @@ def serve_unjudged_good():
 
 @app.route('/', subdomain='good')
 def redirect_to_held():
-    return redirect('//decent.' + app.config['SERVER_NAME'])
+    return redirect('//held.' + app.config['SERVER_NAME'])
 
 
 @app.route('/', subdomain='held')
 def queue_held():
     try:
-        good = get_held_webms()
-        webm = choice(good)
+        decent = get_held_webms()
+        webm = choice(decent)
     except IndexError:
         abort(404, 'There are no held webms.')
     return render_template(
         'queues.html',
         webm=webm,
-        queue='decent',
+        queue='held',
         stats=get_stats(),
      history=get_log(webm))
 
@@ -540,11 +543,11 @@ def queue_bad():
      stats=get_stats())
 
 
-def mark_good(webm):
+def mark_decent(webm):
     global delta
-    add_log(webm, 'marked good')
+    add_log(webm, 'marked decent')
     delta += 1
-    os.symlink('webms/all/' + webm, 'webms/good/' + webm)
+    os.symlink('webms/all/' + webm, 'webms/decent/' + webm)
 
 
 def mark_bad(webm):
@@ -576,11 +579,11 @@ def mark_hold(webm):
     os.symlink('webms/all/' + webm, 'webms/held/' + webm)
 
 
-def unmark_good(webm):
+def unmark_decent(webm):
     global delta
     delta -= 1
     add_log(webm, 'demoted')
-    os.unlink('webms/good/' + webm)
+    os.unlink('webms/decent/' + webm)
 
 
 def unmark_bad(webm):
@@ -593,7 +596,7 @@ def unmark_bad(webm):
 def mark_music(webm):
     global delta
     delta += 3
-    os.unlink('webms/good/' + webm)
+    os.unlink('webms/decent/' + webm)
     os.symlink('webms/all/' + webm, 'webms/music/' + webm)
     add_log(webm, 'shunted')
 
@@ -602,7 +605,7 @@ def unmark_music(webm):
     global delta
     delta -= 3
     os.unlink('webms/music/' + webm)
-    os.symlink('webms/all/' + webm, 'webms/good/' + webm)
+    os.symlink('webms/all/' + webm, 'webms/decent/' + webm)
     add_log(webm, 'unshunted')
 
 
@@ -647,15 +650,15 @@ def moderate_webm(domain=None):
     verdict = request.form['verdict']
 
     try:
-        if verdict == 'good':
-            mark_good(webm)
+        if verdict == 'decent' or verdict == 'good':
+            mark_decent(webm)
         elif verdict == 'bad':
             mark_bad(webm)
         elif verdict == 'shunt':
-            if webm in get_good_webms():
+            if webm in get_decent_webms():
                 mark_music(webm)
             else:
-                abort(400, 'can only shunt good webms')
+                abort(400, 'can only shunt decent webms')
         elif verdict == 'unshunt':
             if webm in get_music_webms():
                 unmark_music(webm)
@@ -664,21 +667,21 @@ def moderate_webm(domain=None):
         elif verdict == 'report':
             mark_ugly(webm)
         elif verdict == 'demote':
-            if webm in get_good_webms():
-                unmark_good(webm)
+            if webm in get_decent_webms():
+                unmark_decent(webm)
                 flash('Demoted ' + webm)
                 return redirect('/', 303)
             else:
-                abort(400, 'can only demote good webms')
+                abort(400, 'can only demote decent webms')
         elif verdict == 'feature':
             if is_unpromotable(webm):
                 abort(400, 'not allowed to feature')
-            if webm in get_good_webms():
+            if webm in get_decent_webms():
                 mark_best(webm)
                 flash('Promoted ' + webm)
                 return redirect('/', 303)
             else:
-                abort(400, 'can only feature good webms')
+                abort(400, 'can only feature decent webms')
         elif verdict == 'forgive':
             if webm in get_bad_webms():
                 unmark_bad(webm)
@@ -687,18 +690,18 @@ def moderate_webm(domain=None):
             else:
                 abort(400, 'can only forgive bad webms')
         elif verdict == 'keep' or verdict == 'hold':
-            if webm in get_unheld_good_webms():
+            if webm in get_unheld_decent_webms():
                 mark_hold(webm)
             return redirect('/')
         elif verdict == 'veto' or verdict == 'nsfw':
-            if webm in get_good_webms():
+            if webm in get_decent_webms():
                 if webm not in get_best_webms():
                     mark_veto(webm)
                     return redirect('/', 303)
                 else:
                     abort(400, 'cannot veto things already in best')
             else:
-                abort(400, 'can only veto good webms')
+                abort(400, 'can only veto decent webms')
         elif verdict == 'unsure':
             # placebo
             add_log(webm, 'skipped')
@@ -751,7 +754,7 @@ if __name__ == '__main__':
         'webms/all',
         'webms/bad',
         'webms/best',
-        'webms/good',
+        'webms/decent',
         'webms/held',
         'webms/metadata',
         'webms/music',

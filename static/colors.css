@@ -2,7 +2,7 @@
 	background-color: #a520da; /* triad with goldenrod */
 	border-color: #a520da; /* triad with goldenrod */
 }
-.good {
+.decent {
 	background-color: #20daa5; /* triad with goldenrod */
 	border-color: #20daa5; /* triad with goldenrod */
 }
@@ -18,7 +18,7 @@
 	background-color: #1e90ff;
 	border-color: #1e90ff;
 }
-.held, .decent {
+.held {
 	background-color: #2fffff; /* #20daa5 minus #daa520 */
 	border-color: #2fffff;
 }

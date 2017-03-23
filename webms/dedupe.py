@@ -20,7 +20,7 @@ def purge_file(fn, md5=''):
     string = strftime('%Y-%m-%d %H:%M:%S sysadmin purged duplicate ' + md5)
     with open(os.path.join('metadata', fn), 'a') as lf:
         lf.write(string + '\n')
-    dirs = ['bad', 'held', 'music', 'veto', 'trash', 'best', 'good', 'all']
+    dirs = ['bad', 'held', 'music', 'veto', 'trash', 'best', 'decent', 'all']
     for directory in dirs:
         try:
             os.remove(os.path.join(directory, fn))
