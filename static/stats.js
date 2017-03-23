@@ -3,7 +3,7 @@ var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
 	var queues = [ 
 		[ 'best' ],
-		[ 'held', 'good', 'music' ],
+		[ 'held', 'decent', 'music' ],
 		[ 'pending' ],
 		[ 'bad' ],
 		['trash' ]
