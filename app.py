@@ -483,6 +483,7 @@ def queue_best():
         'queues.html',
         webm=webm,
         queue='best',
+        stats=get_stats(),
         token=token,
         unpromotable=is_votable(webm),
      user=get_user())
@@ -499,6 +500,7 @@ def queue_top():
         'queues.html',
         webm=webm,
         queue='best',
+        stats=get_stats(),
         token=token,
         history=get_log(webm),
      unpromotable=is_votable(webm))
@@ -516,6 +518,7 @@ def queue_music():
         'queues.html',
         webm=webm,
         queue='music',
+        stats=get_stats(),
         token=token,
         history=get_log(webm),
      count=len(webms))
