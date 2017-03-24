@@ -621,7 +621,8 @@ def mark_best(webm):
 
 
 @app.route('/settings/change-nick', methods=['POST'])
-def change_nick():
+@app.route('/settings/change-nick', methods=['POST'], subdomain='<domain>')
+def change_nick(domain=None):
     nick = request.form['nick']
     user = get_user()
 

@@ -25,7 +25,7 @@
 				<!--Hello, {{ user }}. -->
 				<a href="{{ url_for('request_ban') }}" onclick="return confirm('This will literally lock you out of this website instantly, until a sysadmin removes you from the block list. Are you sure?');">🚮 Ban</a>
 				{% else %}
-					<form action="{{ url_for('change_nick') }}" method="POST">
+				<form action="/settings/change-nick" method="POST">
 						<label for="nick">What's your name?</label>
 						<input required type="text" placeholder="{{ user }}" id="nick" name="nick" />
 						<input type="submit" value="Sign in" />
