@@ -1,6 +1,9 @@
 {% extends 'skeleton.html' %}
 {% block body %}
 	<div class="content {{ queue }}" id="js-body">
+		<div class="top-right hide-small">
+			<progress id="js-progress" min="0"></progress>
+		</div>
 		<div class="bottom-right">
 			<div class="grey-box">
 				<a class="privlink hide-small" href="{{ url_for('about') }}">Privacy & About</a>
@@ -45,9 +48,6 @@
 			</video>
 		</span>
 		{% endif %}
-		<div class="top-right hide-small">
-			<progress id="js-progress" min="0"></progress>
-		</div>
 		{% if not domain %}
 		<div class="top-left">
 			{% include 'moderation.html' %}
