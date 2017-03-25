@@ -16,7 +16,6 @@
 	{% elif queue == 'music' %}
 		<input class="decent" type="submit" title="Move back to 'decent' (unshunt)" name="verdict" value="unshunt">
 	{% elif queue == 'decent' %}
-		<div>
 		{% if unpromotable  %}
 			<input class="best left" type="submit" title="[cannot feature: {{ unpromotable }}]" name="verdict" value="feature" disabled>
 			<input class="decent" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="nsfw" disabled>
@@ -32,7 +31,6 @@
 			<input class="music" type="submit" id="js-shunt" title="Mark as decent music (shunt!)" name="verdict" value="shunt">
 			<!-- <input class="decent right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto"> -->
 		{% endif %}
-		</div>
 			{% if unpromotable == 'cannot feature own videos' or unpromotable == 'you held this last time' or unpromotable == 'you must sign in to do this' %}
 			<input class="held" type="submit" title="[cannot hold: {{ unpromotable }}]" name="verdict" value="hold" disabled>
 			{% elif unpromotable == 'you demoted this before!'  %}

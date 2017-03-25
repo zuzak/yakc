@@ -181,6 +181,10 @@ progress.muted::before {
 
 .moderation input {
 	border-style: outset;
+	float: left;
+}
+.moderation input:nth-child(3n) {
+	clear: both;
 }
 input:disabled {
 	/* this probably looks terrible */
