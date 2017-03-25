@@ -8,6 +8,11 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='queues.css', _scheme='', _external=True) }}" />
 		{% endblock %}
 		{% block js %}
+		<script src="https://cdn.ravenjs.com/3.13.1/raven.min.js"></script>
+		<script>
+			Raven.config('https://1669aec9a0be46b9ba6a76b421ec5df2@sentry.io/147934').install()
+		</script>
+
 		{% endblock %}
 	</head>
 	<body>
