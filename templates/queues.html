@@ -175,19 +175,29 @@
 	<script>
 		// Keyboard shortcuts
 		document.onkeypress = function ( e ) {
+			console.log( 'okay' );
 			e = e || window.event;
 
 			var code = e.code || e.charCode;
-
 
 			var letter = code.slice( -1 ).toLowerCase();
 			var moderation = document.getElementById( 'moderation' );
 			var inputs = moderation.children;
 
 			for ( var i = 0; i < inputs.length; i++ ) {
-				if ( inputs[i].value.charAt( 0 ) === letter ) {
-					inputs[i].click();
-					break;
+				if ( inputs[i].nodeName === 'INPUT' ) {
+					console.log( inputs[i], 'ok' );
+					if ( inputs[i].value.charAt( 0 ) === letter ) {
+						var video = document.getElementById( 'js-video' );
+						var div = document.createElement( 'div' );
+						div.className = 'hint';
+						div.innerHTML = inputs[i].value;
+						video.parentElement.appendChild( div );
+
+						document.getElementById( 'js-video' ).style.display = 'none';
+						inputs[i].click();
+						break;
+					}
 				}
 			}
 		}

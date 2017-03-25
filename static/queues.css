@@ -196,3 +196,15 @@ input:disabled {
 @media (max-width: 600px) {
 	.hide-small { display: none; }
 }
+.hint {
+	font-size: 3em;
+	color: gray;
+	text-decoration: none;
+
+}
+.hint::before {
+	content: '[';
+}
+.hint::after {
+	content: ']';
+}
