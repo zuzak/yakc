@@ -62,8 +62,8 @@ var createDivs = function ( data ) {
 var updateCounts = function ( data ) {
 	var div;
 	var total = 0 - data.counts.pending - data.counts.total;
-	data.counts.good = data.counts.held
-	delete data.counts.held // deletes property from object
+	data.counts.good = data.counts.held;
+	delete data.counts.held; // deletes property from object
 
 	for ( var queue in data.counts ) {
 		if ( data.counts.hasOwnProperty( queue ) ) {
@@ -85,7 +85,7 @@ var updateCounts = function ( data ) {
 
 
 	div = document.getElementById( 'delta' );
-	div.innerHTML = 'Δ' + data.delta + ' ' + Math.round( 100 * total / data.counts.total ) + '%'
+	div.innerHTML = 'Δ' + data.delta + ' ' + Math.round( 100 * total / data.counts.total ) + '%';
 	if ( data.delta < 0 ) {
 		div.className = 'delta negative';
 	} else if ( data.delta === 0 ) {
