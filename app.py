@@ -263,12 +263,13 @@ def get_unheld_decent_webms():
 
 def get_stats():
     best = len(get_best_webms())
+    held = len(get_held_webms())
     return {
         'counts': {
-            'decent': (len(get_decent_webms()) - best),
+            'decent': (len(get_decent_webms()) - best - held),
             'bad': len(get_bad_webms()),
             'music': len(get_music_webms()),
-            'held': len(get_held_webms()),
+            'held': held,
             'best': best,
             'pending': len(get_pending_webms()),
             'trash': len(get_trash_webms()),
