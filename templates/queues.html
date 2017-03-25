@@ -185,7 +185,7 @@
 			var inputs = moderation.children;
 
 			for ( var i = 0; i < inputs.length; i++ ) {
-				if ( inputs[i].nodeName === 'INPUT' ) {
+				if ( inputs[i].type === 'submit' ) {
 					console.log( inputs[i], 'ok' );
 					if ( inputs[i].value.charAt( 0 ) === letter ) {
 						if ( !inputs[i].disabled ) {
