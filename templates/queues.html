@@ -188,15 +188,17 @@
 				if ( inputs[i].nodeName === 'INPUT' ) {
 					console.log( inputs[i], 'ok' );
 					if ( inputs[i].value.charAt( 0 ) === letter ) {
-						var video = document.getElementById( 'js-video' );
-						var div = document.createElement( 'div' );
-						div.className = 'hint';
-						div.innerHTML = inputs[i].value;
-						video.parentElement.appendChild( div );
+						if ( !inputs[i].disabled ) {
+							var video = document.getElementById( 'js-video' );
+							var div = document.createElement( 'div' );
+							div.className = 'hint';
+							div.innerHTML = inputs[i].value;
+							video.parentElement.appendChild( div );
 
-						document.getElementById( 'js-video' ).style.display = 'none';
-						inputs[i].click();
-						break;
+							document.getElementById( 'js-video' ).style.display = 'none';
+							inputs[i].click();
+							break;
+						}
 					}
 				}
 			}
