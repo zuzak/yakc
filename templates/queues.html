@@ -172,4 +172,24 @@
 			progress.value = video.currentTime;
 		} );
 	</script>
+	<script>
+		// Keyboard shortcuts
+		document.onkeypress = function ( e ) {
+			e = e || window.event;
+
+			var code = e.code || e.charCode;
+
+
+			var letter = code.slice( -1 ).toLowerCase();
+			var moderation = document.getElementById( 'moderation' );
+			var inputs = moderation.children;
+
+			for ( var i = 0; i < inputs.length; i++ ) {
+				if ( inputs[i].value.charAt( 0 ) === letter ) {
+					inputs[i].click();
+					break;
+				}
+			}
+		}
+	</script>
 {% endblock %}
