@@ -326,6 +326,10 @@ def show_webm(name, domain=None):
     token = None
     if name not in get_all_webms():
         if metadata_exists(name):
+            for line in get_log(name).split('\n'):
+                if 'purged duplicate' in line:
+                    md5 = line.split(' ')[-1]
+                    return redirect('/md5/' + md5, 301)
             abort(410, "This webm has been deleted")
         else:
             abort(404, "No webm exists or has existed with that name")
