@@ -56,6 +56,9 @@ li a {
 	position: fixed;
 	top: 1em;
 }
+.top-right span {
+	padding-right: 1em;
+}
 .best form {
 	bottom: 1em;
 	left: 1em;
@@ -78,6 +81,7 @@ li.stats {
 	margin:0;
 	padding:0;
 	text-decoration: none;
+	min-height: 1px;
 }
 .debug, .github, .history {
 	background-color: #777;
@@ -168,7 +172,11 @@ progress {
 	border: 0;
 }
 progress:indeterminate {
-	display: none;
+}
+progress.muted::before {
+	border: 1px solid red;
+	display:none;
+	content: '🔇';
 }
 
 .moderation input {

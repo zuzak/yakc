@@ -94,21 +94,37 @@
 		<pre class="debug">{{debug}}</pre>
 		{% endif %}
 	</div>
-	{% if queue == 'decent' %}
 	<script>
+		function addMutedIcon() {
+			var prog = document.getElementById( 'js-progress' );
+			var span = document.createElement( 'span' );
+			span.innerHTML = '🔇 ';
+			prog.parentNode.insertBefore(span, prog);
+		}
+
 		document.getElementById( "js-video" ).addEventListener( "loadeddata", function () {
+			console.log("hello");
 			if ( typeof ( this.mozHasAudio !== "undefined" ) && this.mozHasAudio === false) {
-				document.getElementById("js-shunt").disabled = true;
-				document.getElementById("js-shunt").title = "[cannot shunt: no audio]"
+				addMutedIcon();
+				try {
+					document.getElementById("js-shunt").disabled = true;
+					document.getElementById("js-shunt").title = "[cannot shunt: no audio]";
+				} catch ( e if e instanceof TypeError ) {
+					// no shunt button
+				}
 			} else if ( typeof ( this.webkitAudioDecodedByteCount !== "undefined" ) && this.webkitAudioDecodedByteCount === 0 ) {
-				document.getElementById("js-shunt").disabled = true;
-				document.getElementById("js-shunt").title = "[cannot shunt: no audio]"
+				addMutedIcon();
+				try {
+					document.getElementById("js-shunt").disabled = true;
+					document.getElementById("js-shunt").title = "[cannot shunt: no audio]";
+				} catch ( e if e instanceof TypeError ) {
+					// still no shunt button
+				}
 			} else {
 				// document.getElementById("js-shunt").disabled = false;
 			}
 		} );
 	</script>
-	{% endif %}
 	<script>
 		// Code to toggle full-screen and actual-size webms
 		// The persistence when one hits a button makes it complicated :)
@@ -118,13 +134,12 @@
 		} );
 
 		function changeSize(fullscreen) {
-			console.log('b', fullscreen);
 			if ( fullscreen === "false") {
 				document.getElementById( "js-body" ).classList.add( "actualsize" );
-				ga('send', 'event', 'actual size toggle', 'on');
+				//ga('send', 'event', 'actual size toggle', 'on');
 			} else {
 				document.getElementById( "js-body" ).classList.remove( "actualsize" );
-				ga('send', 'event', 'actual size toggle', 'off');
+				//ga('send', 'event', 'actual size toggle', 'off');
 			}
 		}
 
@@ -144,9 +159,10 @@
 			progress.setAttribute( 'max', video.duration );
 		} );
 
-		video.addEventListener( 'dataloaded', function () {
+/*
+		video.addEventListener( 'loadeddata', function () {
 			progress.setAttribute( 'max', video.duration );
-		} );
+		} );*/
 
 		video.addEventListener( 'metadataloaded', function () {
 		} );

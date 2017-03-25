@@ -29,12 +29,6 @@
 			{% if user %}
 			ga('set', 'userId', '{{user}}');// Set the user ID using signed-in user_id.
 			{% endif %}
-
-
-			document.getElementById('moderation').onsubmit = function () {
-				console.log('a');
-				ga('send', 'event', 'moderation', 'submit');
-			};
 		</script>
 	</body>
 </html>
