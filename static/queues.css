@@ -175,7 +175,7 @@ progress:indeterminate {
 }
 progress.muted::before {
 	border: 1px solid red;
-	display:none;
+	display: none;
 	content: '🔇';
 }
 
@@ -198,8 +198,10 @@ input:disabled {
 }
 .hint {
 	font-size: 3em;
-	color: gray;
+	color: white;
 	text-decoration: none;
+	padding: 2em;
+	border-radius: 999em;
 
 }
 .hint::before {
@@ -207,4 +209,7 @@ input:disabled {
 }
 .hint::after {
 	content: ']';
+}
+.video-link {
+	text-decoration: none;
 }

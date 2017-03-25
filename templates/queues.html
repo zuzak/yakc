@@ -36,7 +36,7 @@
 		{% endif %}
 
 		{% if not direct %}
-		<a href="{{ url_for('show_webm', name='.'.join(webm.split('.')[:1])) }}">
+		<a class="video-link" href="{{ url_for('show_webm', name='.'.join(webm.split('.')[:1])) }}">
 			<video id="js-video" autoplay loop>
 				<source src="/{{ webm }}">
 			</video>
@@ -191,11 +191,15 @@
 						if ( !inputs[i].disabled ) {
 							var video = document.getElementById( 'js-video' );
 							var div = document.createElement( 'div' );
-							div.className = 'hint';
+							div.className = 'hint ' + inputs[i].className;
 							div.innerHTML = inputs[i].value;
 							video.parentElement.appendChild( div );
+							
+							// force mid-screen
+							document.getElementById( "js-body" ).classList.add( "actualsize" );
 
-							document.getElementById( 'js-video' ).style.display = 'none';
+							//document.getElementById( 'js-video' ).style.display = 'none';
+							document.getElementById( 'js-video' ).remove();
 							inputs[i].click();
 							break;
 						}
