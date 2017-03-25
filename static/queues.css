@@ -169,7 +169,7 @@ progress {
 	max-width: 100%;
 	height: 1em;
 	float: right;
-	border: 0;
+	/** border: 0; **/
 }
 progress:indeterminate {
 }
