@@ -26,7 +26,7 @@
 			{% endif %}
 			<!-- <input class="decent right" type="submit" title="[cannot veto: {{ unpromotable }}]" name="verdict" value="veto" disabled> -->
 		{% else %}
-			<input class="best left" type="submit" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="feature" onclick="confirm('Are you sure you want to feature this as one of the best videos available on this website?')">
+			<input class="best left" type="submit" title="This is the best video ever (and I promise it's work-safe)" name="verdict" value="feature" onclick="return confirm('Are you sure you want to feature this as one of the best videos available on this website?')">
 			<input class="decent" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="nsfw">
 			<input class="music" type="submit" id="js-shunt" title="Mark as decent music (shunt!)" name="verdict" value="shunt">
 			<!-- <input class="decent right" type="submit" title="Prevent this video from entering 'best' (veto)" name="verdict" value="veto"> -->
