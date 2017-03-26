@@ -144,10 +144,11 @@
 		}
 
 		var fs = localStorage.getItem('fullscreen');
-		if ( fs === 'false' ) {
-			document.getElementById( 'js-fs' ).checked = false;
-		} else {
+		if ( fs === true ) {
 			document.getElementById( 'js-fs' ).checked = true;
+		} else {
+			document.getElementById( 'js-fs' ).checked = false;
+			changeSize("false");
 		}
 		changeSize(fs);
 	</script>
