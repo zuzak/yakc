@@ -217,3 +217,7 @@ input:disabled {
 .video-link {
 	text-decoration: none;
 }
+
+.hidden-controls .hideable {
+	display: none;
+}

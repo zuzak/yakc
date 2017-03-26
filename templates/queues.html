@@ -1,25 +1,27 @@
 {% extends 'skeleton.html' %}
 {% block body %}
-	<div class="content {{ queue }}" id="js-body">
+	<div class="content {{ queue }} actualsize" id="js-body">
 		<div class="top-right hide-small">
 			<progress id="js-progress" min="0"></progress>
 		</div>
 		<div class="bottom-right">
-			<div class="grey-box">
+			<div class="grey-box hideable">
 				<a class="privlink hide-small" href="{{ url_for('about') }}">Privacy & About</a>
 				<a class="privlink hide-small" href="//github.com/zuzak/yakc/issues/new">Report problem</a>
 				{% include'news.html' %}
 				{% if stats %} <span class="hide-small">{{ stats.version }}</span> {% endif %}
 			</div>
 			<div class="grey-box">
-				<form class="fs-toggle">
-					<input type="checkbox" id="js-fs" />
-					<label for="js-fs">Stretch webms <span class="hide-small">to fill screen</span></label>
+				<form class="settings">
+					<input type="checkbox" id="js-fs" checked/>
+					<label for="js-fs">Stretch webms <span class="hide-small hideable">to fill screen</span></label>
+					<input type="checkbox" id="js-hidecontrols" />
+					<label for="js-hidecontrols">Hide UI</label>
 				</form>
 			</div>
 		</div>
 		{% if user %}
-		<div class="bottom-left">
+		<div class="bottom-left hideable">
 			<div class="grey-box hide-small">
 				{% if '.' not in user %}
 				<!--Hello, {{ user }}. -->
@@ -49,7 +51,7 @@
 		</span>
 		{% endif %}
 		{% if not domain %}
-		<div class="top-left">
+		<div class="top-left hideable">
 			{% include 'moderation.html' %}
 			<ul>
 			{% if stats %}
@@ -132,6 +134,32 @@
 		} );
 	</script>
 	<script>
+		document.getElementById( "js-hidecontrols" ).addEventListener( "change", function () {
+			localStorage.setItem('hidecontrols', document.getElementById( "js-hidecontrols" ).checked );
+			hideControls(localStorage.getItem('hidecontrols'));
+		} );
+
+		function hideControls(hide) {
+			if ( hide == "true") {
+				document.getElementById( "js-body" ).classList.add( "hidden-controls" );
+				//ga('send', 'event', 'actual size toggle', 'on');
+			} else {
+				document.getElementById( "js-body" ).classList.remove( "hidden-controls" );
+				//ga('send', 'event', 'actual size toggle', 'off');
+			}
+		}
+
+		var fs = localStorage.getItem('hidecontrols');
+		if ( fs === true ) {
+			document.getElementById( 'js-hidecontrols' ).checked = true;
+			hideControls("true");
+		} else {
+			document.getElementById( 'js-hidecontrols' ).checked = false;
+			hideControls(false);
+		}
+		changeSize(fs);
+	</script>
+	<script>
 		// Code to toggle full-screen and actual-size webms
 		// The persistence when one hits a button makes it complicated :)
 		document.getElementById( "js-fs" ).addEventListener( "change", function () {
@@ -140,11 +168,11 @@
 		} );
 
 		function changeSize(fullscreen) {
-			if ( fullscreen === "false") {
-				document.getElementById( "js-body" ).classList.add( "actualsize" );
+			if ( fullscreen === "true") {
+				document.getElementById( "js-body" ).classList.remove( "actualsize" );
 				//ga('send', 'event', 'actual size toggle', 'on');
 			} else {
-				document.getElementById( "js-body" ).classList.remove( "actualsize" );
+				document.getElementById( "js-body" ).classList.add( "actualsize" );
 				//ga('send', 'event', 'actual size toggle', 'off');
 			}
 		}
