@@ -736,6 +736,7 @@ def moderate_webm(domain=None):
 def api_stats():
     return jsonify(get_stats())
 
+
 @app.route('/best.json', subdomain='api')
 @cross_origin()
 def api_best():
@@ -746,6 +747,7 @@ def api_best():
         foo.append(url_for('serve_webm', name=webm))
 
     return jsonify(foo)
+
 
 @app.errorhandler(404)
 @app.errorhandler(400)
