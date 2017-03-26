@@ -1,4 +1,4 @@
-from flask import (Flask, send_from_directory, abort,
+from flask import (Flask, send_from_directory, abort, url_for,
                    render_template, request, flash, redirect, g, jsonify)
 from flask_cors import CORS, cross_origin
 from random import choice, random
@@ -733,9 +733,19 @@ def moderate_webm(domain=None):
 
 @app.route('/stats.json', subdomain='api')
 @cross_origin()
-def api():
+def api_stats():
     return jsonify(get_stats())
 
+@app.route('/best.json', subdomain='api')
+@cross_origin()
+def api_best():
+    # hackish code :)
+    foo = list()
+    for webm in get_best_webms():
+        webm = webm.split('.')[:-1][0]
+        foo.append(url_for('serve_webm', name=webm))
+
+    return jsonify(foo)
 
 @app.errorhandler(404)
 @app.errorhandler(400)

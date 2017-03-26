@@ -45,7 +45,8 @@
 		<h2>Development</h2>
 		<ul>
 			<li>Patches and issues welcome: https://github.com/zuzak/yakc</li>
-			<li>API available at http://api.webm.website/stats.json</li>
+			<li>Statistics API available at {{ url_for( 'api_stats' ) }}</li>
+			<li>A list of best webms is available at {{ url_for( 'api_best' ) }}</li>
 		</ul>
 		<p>
 
