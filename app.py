@@ -381,7 +381,6 @@ def queue_pending():
         'queues.html',
         webm=webm,
         token=generate_webm_token(webm),
-        count=len(pending),
         history=get_log(webm),
         stats=get_stats(),
         queue='pending',
@@ -410,7 +409,6 @@ def queue_decent():
         webm=webm,
         token=generate_webm_token(webm),
         queue='decent',
-        count=len(decent),
         best=best,
         held=held,
         unpromotable=is_unpromotable(webm),
@@ -445,7 +443,6 @@ def serve_unjudged_decent():
             webm=webm,
             token=generate_webm_token(webm),
             queue='decent',
-            count=len(decent),
             best=best,
             held=held,
             unpromotable=is_unpromotable(webm),
@@ -525,8 +522,7 @@ def queue_music():
         queue='music',
         stats=get_stats(),
         token=token,
-        history=get_log(webm),
-     count=len(webms))
+        history=get_log(webm))
 
 
 @app.route('/', subdomain='index')
@@ -547,7 +543,6 @@ def queue_bad():
         webm=webm,
         token=generate_webm_token(webm),
         queue='bad',
-        count=len(webms),
      stats=get_stats())
 
 
