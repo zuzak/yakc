@@ -65,12 +65,12 @@
 					-->
 					<div class="clear"></div>
 				</li>
+				<li class="hide-small">
+					<a href="{{ url_for('about') }} ">
+						{{ stats.counts[queue] }} {{ queue }} videos
+					</a>
+				</li>
 			{% endif %}
-			<li class="hide-small">
-				<a href="{{ url_for('about') }} ">
-					{{ stats.counts[queue] }} {{ queue }} videos
-				</a>
-			</li>
 			{% with messages = get_flashed_messages() %}
 				{% if messages %}
 					{% for message in messages %}
