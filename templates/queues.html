@@ -109,16 +109,24 @@
 				try {
 					document.getElementById("js-shunt").disabled = true;
 					document.getElementById("js-shunt").title = "[cannot shunt: no audio]";
-				} catch ( e if e instanceof TypeError ) {
-					// no shunt button
+				} catch ( e ) {
+					if ( e instanceof TypeError ) {
+						// no shunt button
+					} else {
+						throw e;
+					}
 				}
 			} else if ( typeof ( this.webkitAudioDecodedByteCount !== "undefined" ) && this.webkitAudioDecodedByteCount === 0 ) {
 				addMutedIcon();
 				try {
 					document.getElementById("js-shunt").disabled = true;
 					document.getElementById("js-shunt").title = "[cannot shunt: no audio]";
-				} catch ( e if e instanceof TypeError ) {
-					// still no shunt button
+				} catch ( e ) {
+					if ( e instanceof TypeError ) {
+						// still no shunt button
+					} else {
+						throw e;
+					}
 				}
 			} else {
 				// document.getElementById("js-shunt").disabled = false;
