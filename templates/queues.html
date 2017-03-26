@@ -182,7 +182,6 @@
 	<script>
 		// Keyboard shortcuts
 		document.onkeypress = function ( e ) {
-			console.log( 'okay' );
 			e = e || window.event;
 
 			var code = e.code || e.charCode;
@@ -193,26 +192,46 @@
 
 			for ( var i = 0; i < inputs.length; i++ ) {
 				if ( inputs[i].type === 'submit' ) {
-					console.log( inputs[i], 'ok' );
 					if ( inputs[i].value.charAt( 0 ) === letter ) {
 						if ( !inputs[i].disabled ) {
-							var video = document.getElementById( 'js-video' );
-							var div = document.createElement( 'div' );
-							div.className = 'hint ' + inputs[i].className;
-							div.innerHTML = inputs[i].value;
-							video.parentElement.appendChild( div );
-							
-							// force mid-screen
-							document.getElementById( "js-body" ).classList.add( "actualsize" );
-
-							//document.getElementById( 'js-video' ).style.display = 'none';
-							document.getElementById( 'js-video' ).remove();
 							inputs[i].click();
+							//showHint( inputs[i].value, inputs[i].className );
 							break;
 						}
 					}
 				}
 			}
 		}
+
+		var showHint = function ( value, className ) {
+			var video = document.getElementById( 'js-video' );
+			var div = document.createElement( 'div' );
+			if ( typeof className === 'undefined' ) {
+				div.className = 'hint ' + value;
+			} else {
+				div.className = 'hint ' + className;
+			}
+			div.innerHTML = value;
+			video.parentElement.appendChild( div );
+
+			// force mid-screen
+			document.getElementById( "js-body" ).classList.add( "actualsize" );
+
+			//document.getElementById( 'js-video' ).style.display = 'none';
+			document.getElementById( 'js-video' ).remove();
+		}
+
+		var inputs = document.getElementById( 'moderation' ).children;
+		for ( var i = 0; i < inputs.length; i++ ) {
+			if ( inputs[i].type === 'submit' ) {
+				console.log('ok!');
+				inputs[i].addEventListener( 'click', function () {
+					console.log('yarr', this);
+					showHint( this.value, this.className );
+				} );
+			}
+		}
+
+
 	</script>
 {% endblock %}
