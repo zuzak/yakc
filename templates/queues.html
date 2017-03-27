@@ -103,7 +103,6 @@
 		}
 
 		document.getElementById( "js-video" ).addEventListener( "loadeddata", function () {
-			console.log("hello");
 			if ( typeof ( this.mozHasAudio !== "undefined" ) && this.mozHasAudio === false) {
 				addMutedIcon();
 				try {
@@ -140,7 +139,6 @@
 		} );
 
 		function hideControls(hide) {
-			console.log("HC", hide);
 			if ( hide === "true" || hide === true ) {
 				document.getElementById( "js-body" ).classList.add( "hidden-controls" );
 				//ga('send', 'event', 'actual size toggle', 'on');
@@ -151,13 +149,10 @@
 		}
 
 		var hc = localStorage.getItem('hidecontrols');
-		console.log("hc2", hc);
 		if ( hc === "true" ) {
-			console.log("hc3")
 			document.getElementById( 'js-hidecontrols' ).checked = true;
 			hideControls(true);
 		} else {
-			console.log("hc4");
 			document.getElementById( 'js-hidecontrols' ).checked = false;
 			hideControls(false);
 		}
@@ -255,9 +250,7 @@
 		var inputs = document.getElementById( 'moderation' ).children;
 		for ( var i = 0; i < inputs.length; i++ ) {
 			if ( inputs[i].type === 'submit' ) {
-				console.log('ok!');
 				inputs[i].addEventListener( 'click', function () {
-					console.log('yarr', this);
 					showHint( this.value, this.className );
 				} );
 			}
