@@ -140,7 +140,8 @@
 		} );
 
 		function hideControls(hide) {
-			if ( hide == "true") {
+			console.log("HC", hide);
+			if ( hide === "true" || hide === true ) {
 				document.getElementById( "js-body" ).classList.add( "hidden-controls" );
 				//ga('send', 'event', 'actual size toggle', 'on');
 			} else {
@@ -149,15 +150,17 @@
 			}
 		}
 
-		var fs = localStorage.getItem('hidecontrols');
-		if ( fs === true ) {
+		var hc = localStorage.getItem('hidecontrols');
+		console.log("hc2", hc);
+		if ( hc === "true" ) {
+			console.log("hc3")
 			document.getElementById( 'js-hidecontrols' ).checked = true;
-			hideControls("true");
+			hideControls(true);
 		} else {
+			console.log("hc4");
 			document.getElementById( 'js-hidecontrols' ).checked = false;
 			hideControls(false);
 		}
-		changeSize(fs);
 	</script>
 	<script>
 		// Code to toggle full-screen and actual-size webms
