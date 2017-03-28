@@ -1,4 +1,5 @@
 /* jslint browser: true */
+var hostname = location.hostname.split('.').slice(1).join('.');
 var createDivs = function ( data ) {
 	var body = document.querySelector( '.counter');
 	var queues = [ 
@@ -71,7 +72,7 @@ var updateCounts = function ( data ) {
 			div = document.getElementById( queue );
 			if ( !div ) { continue; }
 			var text = data.counts[queue] + ' ' + queue;
-			div.innerHTML = '<a href="//' + queue + '.webm.website">' + text + '</a>';
+			div.innerHTML = '<a href="//' + queue + '.' + hostname + '">' + text + '</a>';
 			var size = 0.5 * Math.sqrt(data.counts[queue]) + 'em';
 			div.style.height = size;
 			div.style.width = size;
@@ -114,13 +115,13 @@ var getJSON = function(url, callback) {
 
 
 function poll() {
-	getJSON('//api.webm.website/stats.json', function ( e, r ) {
+	getJSON('//api.' + hostname + '/stats.json', function ( e, r ) {
 		updateCounts( r );
 	} );
 }
 
 window.onload = function () {
-	getJSON('//api.webm.website/stats.json', function ( e, r ) {
+	getJSON('//api.' + hostname + '/stats.json', function ( e, r ) {
 		createDivs( r );
 		updateCounts( r );
 	} );
