@@ -318,19 +318,14 @@ def serve_webm(name, domain=None):
 def metadata_exists(webm):
     return os.path.isfile('webms/metadata/' + webm)
 
-
-@app.route('/<name>', subdomain='<domain>')
-@app.route('/<name>')
-def show_webm(name, domain=None):
+def find_queue(name):
     name = name + '.webm'
-    queue = 'pending'
-    token = None
     if name not in get_all_webms():
         if metadata_exists(name):
             for line in get_log(name).split('\n'):
                 if 'purged duplicate' in line:
                     md5 = line.split(' ')[-1]
-                    return redirect('/md5/' + md5, 301)
+                    redirect('/md5/' + md5, 301)
             abort(410, "This webm has been deleted")
         else:
             abort(404, "No webm exists or has existed with that name")
@@ -338,25 +333,45 @@ def show_webm(name, domain=None):
         if name not in get_quality_webms():
             abort(403)
     if name in get_best_webms():
-        queue = 'best'
+        return 'best'
     elif name in get_music_webms():
-        queue = 'music'
+        return 'music'
     elif name in get_decent_webms():
-        queue = 'decent'
+        return 'decent'
     elif name in get_bad_webms():
-        queue = 'bad'
+        return 'bad'
+    return 'pending'
+
+
+
+@app.route('/<name>', subdomain='<domain>')
+@app.route('/<name>')
+def show_webm(name, domain=None):
+    queue = find_queue(name)
+    if queue == 'bad':
         token = generate_webm_token(name)
+    else:
+        token = None
 
     add_log(name, 'viewed directly')
 
     return render_template(
         'queues.html',
-        webm=name,
+        webm=name+'.webm',
         queue=queue,
         token=token,
         direct=True,
      history=get_log(name))
 
+@app.route('/<name>.json', subdomain='api')
+@cross_origin()
+def show_webm_api(name, domain=None):
+    queue = find_queue(name)
+    return jsonify({
+        'name': name,
+        'queue': queue,
+        'version': git_version
+    })
 
 @app.route('/md5/<md5>')
 def serve_md5(md5):
