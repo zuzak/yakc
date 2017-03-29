@@ -31,7 +31,8 @@ Dependencies are `flask`, `flask_cors`, `raven`, and `blinker`.
 If you are getting a 404 on `/`, ensure `SERVER_NAME` is set.
 It's required to get subdomains to work. For local development,
 I set lines like `127.0.0.1 webm.local best.webm.local` in my `/etc/hosts/`
-and set `webm.local` as my `SERVER_NAME`.
+and set `webm.local` as my `SERVER_NAME`. You can't use `localhost` as it
+doesn't support subdomains.
 
 Required directories are created on first run.
 You can seed some webms by doing `cd webms && ./api.py` for a few moments.
