@@ -23,6 +23,7 @@ Example settings file:
 ```python
 # vim:ft=python
 SERVER_NAME="webm.website"
+PORT=3000
 DEBUG=False
 ```
 

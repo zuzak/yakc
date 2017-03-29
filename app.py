@@ -813,4 +813,4 @@ if __name__ == '__main__':
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
-    app.run(host='0.0.0.0', port=3000, threaded=True)
+    app.run(host='0.0.0.0', port=app.config.get('PORT'), threaded=True)
