@@ -70,7 +70,7 @@ def add_log(webm, action):
         with open('webms/metadata/' + webm, 'a') as logfile:
             logfile.write(string + '\n')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    string = ip + " " + action + ' http://webm.website/' + webm
+    string = ip + " " + action + ' http://' + app.config.get('SERVER_NAME') + '/' + webm
     sock.sendto(string.encode(), ('saraneth.lon.fluv.net', 41339))
 
 
