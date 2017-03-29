@@ -66,7 +66,7 @@ def get_ip():
 def add_log(webm, action):
     ip = get_user()
     string = strftime('%Y-%m-%d %H:%M:%S ' + ip + ' ' + action)
-    if ip != get_ip() and action != 'viewed':
+    if action != 'viewed' or (action == 'viewed' and ip != get_ip()):
         with open('webms/metadata/' + webm, 'a') as logfile:
             logfile.write(string + '\n')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
