@@ -367,9 +367,21 @@ def show_webm(name, domain=None):
 @cross_origin()
 def show_webm_api(name, domain=None):
     queue = find_queue(name)
+    history = get_log(name + '.webm')
+    history = history.split('\n')
+    hist = list()
+    for item in history:
+        cur = item.split(' ');
+        if len(cur) < 3:
+            continue
+        if app.config.get('NO_ANONYMIZE') != True:
+            cur[2] = None
+        hist.append({ "date": " ".join(cur[0:2]), "action": " ".join(cur[3:]), "user": cur[2]})
+
     return jsonify({
         'name': name,
         'queue': queue,
+        'history': hist,
         'version': git_version
     })
 

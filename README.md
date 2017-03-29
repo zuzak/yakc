@@ -25,6 +25,7 @@ Example settings file:
 SERVER_NAME="webm.website"
 PORT=3000
 DEBUG=False
+NO_ANONYMIZE=False  # non-true values cause usernames in API to be hidden
 ```
 
 Dependencies are `flask`, `flask_cors`, `raven`, and `blinker`.
