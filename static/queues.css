@@ -83,7 +83,7 @@ li.stats {
 	text-decoration: none;
 	min-height: 1px;
 }
-.debug, .github, .history {
+.github, .history {
 	background-color: #777;
 	border-radius: 0.5em;
 	color: #777; /* TODO */
@@ -99,16 +99,24 @@ li.stats {
 	z-index: 20;
 	display: none;
 }
+.debug {
+	position: fixed;
+	display: inline-block;
+	height: 1em;
+	right: initial;
+	top: initial;
+	left: 1em;
+	bottom: 1em;
+	color: black;
+	font-size: 1em;
+	color: gray;
+	opacity: 0.2;
+	font-size:2em;
+}
 .github {
 	background-color: #999;
 	top: 3.5em;
 	z-index: 15;
-}
-.debug {
-	background-color: #bbb;
-	color: #bbb;
-	top: 5em;
-	z-index: 10;
 }
 .debug:hover, .history:hover {
 	color: #333;
