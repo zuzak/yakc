@@ -374,7 +374,7 @@ def show_webm_api(name, domain=None):
         cur = item.split(' ');
         if len(cur) < 3:
             continue
-        if app.config.get('NO_ANONYMIZE') != True:
+        if app.config.get('NO_ANONYMIZE') != True and cur[2] != 'sysadmin':
             cur[2] = None
         hist.append({ "date": " ".join(cur[0:2]), "action": " ".join(cur[3:]), "user": cur[2]})
 
