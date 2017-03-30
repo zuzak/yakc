@@ -1,9 +1,11 @@
 {% extends 'skeleton.html' %}
 {% block body %}
 	<div class="content {{ queue }} actualsize" id="js-body">
+		{% if not direct %}
 		<div class="top-right hide-small">
 			<progress id="js-progress" min="0"></progress>
 		</div>
+		{% endif %}
 		<div class="bottom-right">
 			<div class="grey-box hideable">
 				<a class="privlink hide-small" href="{{ url_for('about') }}">Privacy & About</a>
