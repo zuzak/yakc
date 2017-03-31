@@ -115,7 +115,6 @@ var getJSON = function(url, callback) {
 
 
 function poll() {
-	console.log( document.hidden, "DOCHID" );
 	if ( document.hidden === true ) {
 		// pass
 	} else {
