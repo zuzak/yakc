@@ -115,9 +115,14 @@ var getJSON = function(url, callback) {
 
 
 function poll() {
-	getJSON('//api.' + hostname + '/stats.json', function ( e, r ) {
-		updateCounts( r );
-	} );
+	console.log( document.hidden, "DOCHID" );
+	if ( document.hidden === true ) {
+		// pass
+	} else {
+		getJSON('//api.' + hostname + '/stats.json', function ( e, r ) {
+			updateCounts( r );
+		} );
+	}
 }
 
 window.onload = function () {
@@ -126,3 +131,5 @@ window.onload = function () {
 		updateCounts( r );
 	} );
 };
+
+document.addEventListener( 'visibilitychange', poll, false );
