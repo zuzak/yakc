@@ -644,7 +644,7 @@ def mark_best(webm):
     delta += 5
     add_log(webm, 'featured ****')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(('http://best.webm.website/' + webm +
+    sock.sendto(('http://best.' + app.config.get('SERVER_NAME') + '/' + webm +
                  ' has been marked as "best" by ' + get_user()).encode(),
                 ('saraneth.lon.fluv.net', 41337))
     os.symlink('webms/all/' + webm, 'webms/best/' + webm)
