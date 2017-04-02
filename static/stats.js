@@ -126,8 +126,8 @@ function poll() {
 
 window.onload = function () {
 	var hostnames = document.getElementsByClassName( 'sitename' );
-	for ( hostn in hostnames ) {
-		hostn.innerHTML = hostname
+	for ( i in hostnames ) {
+		hostnames[i].innerHTML = hostname
 	}
 	getJSON('//api.' + hostname + '/stats.json', function ( e, r ) {
 		createDivs( r );
