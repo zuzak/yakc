@@ -49,7 +49,7 @@
 	{% endif %}
 	</head>
 	<body>
-		{% if e.code == 404 or e.code == 410 or e.code == 400 %}
+		{% if e.code == 403 or  e.code == 404 or e.code == 410 or e.code == 400 %}
 			<h1>{{ e.code }}: {{ e.name }}</h1>
 			{% for err in e.description.split(':') %}
 				{% for er in err.split('  ') %}
