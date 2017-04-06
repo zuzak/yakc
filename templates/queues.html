@@ -130,6 +130,9 @@
 					}
 				}
 			} else {
+				{% if muteSkip %}
+				window.location.reload();
+				{% endif %}
 				// document.getElementById("js-shunt").disabled = false;
 			}
 		} );

@@ -423,6 +423,27 @@ def queue_pending():
      user=get_user())
 
 
+@app.route('/', subdomain='quiet.pending')
+def queue_quiet_pending():
+    try:
+        pending = get_pending_webms()
+        webm = choice(pending)
+    except IndexError:
+        abort(404, 'no webms to show!')
+    if user_banned():
+        return send_from_directory('webms', 'neil.jpg'), 403
+    return render_template(
+        'queues.html',
+        webm=webm,
+        token=generate_webm_token(webm),
+        history=get_log(webm),
+        stats=get_stats(),
+        queue='pending',
+        muteSkip=True,
+        unpromotable=is_unpromotable(webm),
+     user=get_user())
+
+
 @app.route('/', subdomain='decent')
 def queue_decent():
     best = None
