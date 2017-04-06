@@ -3,6 +3,7 @@
 	<div class="content {{ queue }} actualsize" id="js-body">
 		{% if not direct %}
 		<div class="top-right hide-small">
+			<span id="js-loopcount"></span>
 			<progress id="js-progress" min="0"></progress>
 		</div>
 		{% endif %}
@@ -41,7 +42,7 @@
 
 		{% if not direct %}
 		<a class="video-link" href="{{ url_for('show_webm', name='.'.join(webm.split('.')[:1])) }}">
-			<video id="js-video" autoplay loop>
+			<video id="js-video" autoplay>
 				<source src="/{{ webm }}">
 			</video>
 		</a>
@@ -260,7 +261,14 @@
 				} );
 			}
 		}
-
-
 	</script>
+	<script>
+	var loopCount = 1;
+	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
+		console.log('ok');
+		document.getElementById( 'js-loopcount' ).innerHTML = loopCount++;
+		this.play();
+	} );
+	</script>
+
 {% endblock %}
