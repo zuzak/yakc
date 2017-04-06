@@ -653,6 +653,7 @@ def mark_best(webm):
 @app.route('/settings/change-nick', methods=['POST'])
 @app.route('/settings/change-nick', methods=['POST'], subdomain='<domain>')
 def change_nick(domain=None):
+    abort(403, 'changing nickname is currently disabled')
     nick = request.form['nick']
     user = get_user()
 
