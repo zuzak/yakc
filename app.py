@@ -264,7 +264,7 @@ def get_unheld_decent_webms():
 def get_stats():
     best = len(get_best_webms())
     held = len(get_held_webms())
-    return {
+    stats = {
         'counts': {
             'decent': (len(get_decent_webms()) - best - held),
             'bad': len(get_bad_webms()),
@@ -273,11 +273,19 @@ def get_stats():
             'best': best,
             'pending': len(get_pending_webms()),
             'trash': len(get_trash_webms()),
-            'total': len(get_all_webms())
+            'all': len(get_all_webms())
         },
         'version': str(git_version),
         'delta': delta
     }
+
+    total = 0 - stats['counts']['all']
+    for count in stats['counts']:
+        print(stats)
+        total += stats['counts'][count]
+    stats['counts']['total'] = total
+
+    return stats
 
 
 def delete_holding_queue():
@@ -770,6 +778,10 @@ def api_best():
         foo.append(url_for('serve_webm', name=webm))
 
     return jsonify(foo)
+
+@app.route('/', subdomain='trash')
+def queue_trash():
+    abort(501)
 
 
 @app.errorhandler(404)

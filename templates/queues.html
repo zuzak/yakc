@@ -60,7 +60,7 @@
 				<li class="stats">
 					<!--
 					{% for stat in stats.counts %}
-						{% if stat != 'total' and stat != 'trash' %}
+						{% if stat != 'total' and stat != 'all' %}
 					--><a title="{{ stats.counts[stat]}} {{ stat }} videos" style="width:{{ 100*(stats.counts[stat] / stats.counts.total)}}%" class="stat {{stat}}" href="{{ url_for( 'queue_' + stat ) }}"></a><!--
 						{% endif %}
 					{% endfor %}
