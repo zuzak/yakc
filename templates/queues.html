@@ -20,6 +20,10 @@
 					<label for="js-fs">Stretch webms <span class="hide-small hideable">to fill screen</span></label>
 					<input type="checkbox" id="js-hidecontrols" />
 					<label for="js-hidecontrols">Hide UI</label>
+					{% if queue == 'music' %}
+					<input type="checkbox" id="js-playlist" />
+					<label for="js-playlist">Autorefresh</label>
+					{% endif %}
 				</form>
 			</div>
 		</div>
@@ -271,4 +275,14 @@
 	} );
 	</script>
 
+	{% if queue == 'music' %}
+	<script>
+	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
+		console.log('AAA');
+		if ( document.getElementById( 'js-playlist' ).checked ) {
+			window.location.reload();
+		}
+	} );
+	</script>
+	{% endif %}
 {% endblock %}
