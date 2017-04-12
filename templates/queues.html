@@ -18,12 +18,12 @@
 				<form class="settings">
 					<input type="checkbox" id="js-fs" checked/>
 					<label for="js-fs">Stretch webms <span class="hide-small hideable">to fill screen</span></label>
-					<input type="checkbox" id="js-hidecontrols" />
-					<label for="js-hidecontrols">Hide UI</label>
 					{% if queue == 'music' %}
 					<input type="checkbox" id="js-playlist" />
-					<label for="js-playlist">Autorefresh <span id="js-refreshcount"></span></label>
+					<label for="js-playlist">Auto<span class="hideable">matically</span> refresh <span class="hideable">at end of song</span><span id="js-refreshcount"></span></label>
 					{% endif %}
+					<input type="checkbox" id="js-hidecontrols" />
+					<label for="js-hidecontrols">Hide UI</label>
 				</form>
 			</div>
 		</div>
