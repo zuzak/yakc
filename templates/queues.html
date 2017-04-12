@@ -246,6 +246,22 @@
 			}
 		}
 
+		var addStat = function ( action, video ) {
+			// adds some metadata into local storage
+			// for no reason as of yet, but we'll think of something eventually
+			var data = JSON.parse( localStorage.getItem('stats') );
+			data = data ? data : {};
+			if ( !data[action] ) {
+				data[action] = [];
+			}
+			data[action].push({
+				'timestamp': Date.now(),
+				'fn': video.currentSrc,
+				'time': video.currentTime
+			});
+			localStorage.setItem( 'stats', JSON.stringify( data ) );
+		}
+
 		var showHint = function ( value, className ) {
 			var video = document.getElementById( 'js-video' );
 			var div = document.createElement( 'div' );
@@ -268,6 +284,7 @@
 		for ( var i = 0; i < inputs.length; i++ ) {
 			if ( inputs[i].type === 'submit' ) {
 				inputs[i].addEventListener( 'click', function () {
+					addStat( this.value, document.getElementById( 'js-video' ) );
 					showHint( this.value, this.className );
 				} );
 			}
