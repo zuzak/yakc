@@ -287,7 +287,7 @@
 	<script>
 	// code to auto-refresh page when video finishes
 	if ( localStorage.getItem('wasAutoRefreshed') === 'true' ) {
-		document.getElementById( 'js-refreshcount' ).innerHTML = localStorage.getItem( 'refreshcount' );
+		document.getElementById( 'js-refreshcount' ).innerHTML = '×' + localStorage.getItem( 'refreshcount' );
 	} else {
 		localStorage.setItem('refreshcount', 0)
 	}
@@ -301,7 +301,7 @@
 		console.log('vid end');
 		if ( document.getElementById( 'js-playlist' ).checked ) {
 			console.log('pl on');
-			localStorage.setItem('refreshcount', '×' + parseInt( localStorage.getItem('refreshcount'), 10 ) + 1);
+			localStorage.setItem('refreshcount', ( parseInt( localStorage.getItem('refreshcount'), 10 ) + 1 ));
 			console.log('reloading')
 			localStorage.setItem('wasAutoRefreshed', 'true')
 			window.location.reload();
