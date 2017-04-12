@@ -274,21 +274,25 @@
 		this.play();
 	} );
 	</script>
-
 	{% if queue == 'music' %}
 	<script>
+	// code to auto-refresh page when video finishes
 	if ( localStorage.getItem('wasAutoRefreshed') === 'true' ) {
 		document.getElementById( 'js-refreshcount' ).innerHTML = localStorage.getItem( 'refreshcount' );
 	} else {
 		localStorage.setItem('refreshcount', 0)
 	}
+
+	// you can't easily find out whether the page load is because of a refresh or not
+	// so this is a giant hack: we set wasAutoRefreshed to true just before we autoreload the page
+	// and clear it immediately on every page load
 	localStorage.setItem('wasAutoRefreshed', null)
 
 	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
 		console.log('vid end');
 		if ( document.getElementById( 'js-playlist' ).checked ) {
 			console.log('pl on');
-			localStorage.setItem('refreshcount', parseInt( localStorage.getItem('refreshcount'), 10 ) + 1);
+			localStorage.setItem('refreshcount', '×' + parseInt( localStorage.getItem('refreshcount'), 10 ) + 1);
 			console.log('reloading')
 			localStorage.setItem('wasAutoRefreshed', 'true')
 			window.location.reload();
