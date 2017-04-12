@@ -257,7 +257,8 @@
 			data[action].push({
 				'timestamp': Date.now(),
 				'fn': video.currentSrc,
-				'time': video.currentTime
+				'time': video.currentTime,
+				'duration': video.duration
 			});
 			localStorage.setItem( 'stats', JSON.stringify( data ) );
 			ga('send', 'event', 'moderation', action);
