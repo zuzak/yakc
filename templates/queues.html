@@ -307,6 +307,7 @@
 	// code to auto-refresh page when video finishes
 	if ( localStorage.getItem('wasAutoRefreshed') === 'true' ) {
 		document.getElementById( 'js-refreshcount' ).innerHTML = '×' + localStorage.getItem( 'refreshcount' );
+		document.getElementById( 'js-playlist' ).checked = true; // chrome fix: persist checkbox over refresh
 	} else {
 		localStorage.setItem('refreshcount', 0)
 	}
