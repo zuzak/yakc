@@ -102,16 +102,20 @@
 		{% endif %}
 	</div>
 	<script>
+	{% if not direct %}
 		function addMutedIcon() {
 			var prog = document.getElementById( 'js-progress' );
 			var span = document.createElement( 'span' );
 			span.innerHTML = '🔇 ';
 			prog.parentNode.insertBefore(span, prog);
 		}
+	{% endif %}
 
 		document.getElementById( "js-video" ).addEventListener( "loadeddata", function () {
 			if ( typeof ( this.mozHasAudio !== "undefined" ) && this.mozHasAudio === false) {
+				{% if not direct %}
 				addMutedIcon();
+				{% endif %}
 				try {
 					document.getElementById("js-shunt").disabled = true;
 					document.getElementById("js-shunt").title = "[cannot shunt: no audio]";
@@ -194,6 +198,7 @@
 		}
 		changeSize(fs);
 	</script>
+	{% if not direct %}
 	<script>
 		var progress = document.getElementById( 'js-progress' );
 		var video = document.getElementById( 'js-video' );
@@ -215,6 +220,8 @@
 			progress.value = video.currentTime;
 		} );
 	</script>
+	{% endif %}
+	{% if token %}
 	<script>
 		// Keyboard shortcuts
 		document.onkeypress = function ( e ) {
@@ -266,6 +273,8 @@
 			}
 		}
 	</script>
+	{% endif %}
+	{% if not direct %}
 	<script>
 	var loopCount = 1;
 	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
@@ -299,5 +308,6 @@
 		}
 	} );
 	</script>
+	{% endif %}
 	{% endif %}
 {% endblock %}
