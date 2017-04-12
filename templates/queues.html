@@ -296,7 +296,6 @@
 	<script>
 	var loopCount = 1;
 	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
-		console.log('ok');
 		document.getElementById( 'js-loopcount' ).innerHTML = loopCount++;
 		ga('send', 'event', 'loop');
 		this.play();
@@ -317,11 +316,8 @@
 	localStorage.setItem('wasAutoRefreshed', null)
 
 	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
-		console.log('vid end');
 		if ( document.getElementById( 'js-playlist' ).checked ) {
-			console.log('pl on');
 			localStorage.setItem('refreshcount', ( parseInt( localStorage.getItem('refreshcount'), 10 ) + 1 ));
-			console.log('reloading')
 			localStorage.setItem('wasAutoRefreshed', 'true')
 			window.location.reload();
 		}
