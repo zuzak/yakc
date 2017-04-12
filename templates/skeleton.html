@@ -12,16 +12,6 @@
 		<script>
 			Raven.config('https://1669aec9a0be46b9ba6a76b421ec5df2@sentry.io/147934').install()
 		</script>
-
-		{% endblock %}
-	</head>
-	<body>
-		{% block body %}
-		{% endblock %}
-
-		{% block scripts %}
-		{% endblock %}
-
 		<script>
 			<!-- rip your privacies -->
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -35,5 +25,13 @@
 			ga('set', 'userId', '{{user}}');// Set the user ID using signed-in user_id.
 			{% endif %}
 		</script>
+		{% endblock %}
+	</head>
+	<body>
+		{% block body %}
+		{% endblock %}
+
+		{% block scripts %}
+		{% endblock %}
 	</body>
 </html>

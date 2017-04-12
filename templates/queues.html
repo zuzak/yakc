@@ -155,10 +155,10 @@
 		function hideControls(hide) {
 			if ( hide === "true" || hide === true ) {
 				document.getElementById( "js-body" ).classList.add( "hidden-controls" );
-				//ga('send', 'event', 'actual size toggle', 'on');
+				ga('send', 'event', 'actual size toggle', 'on');
 			} else {
 				document.getElementById( "js-body" ).classList.remove( "hidden-controls" );
-				//ga('send', 'event', 'actual size toggle', 'off');
+				ga('send', 'event', 'actual size toggle', 'off');
 			}
 		}
 
@@ -260,6 +260,7 @@
 				'time': video.currentTime
 			});
 			localStorage.setItem( 'stats', JSON.stringify( data ) );
+			ga('send', 'event', 'moderation', action);
 		}
 
 		var showHint = function ( value, className ) {
@@ -297,6 +298,7 @@
 	document.getElementById( 'js-video' ).addEventListener( 'ended', function () {
 		console.log('ok');
 		document.getElementById( 'js-loopcount' ).innerHTML = loopCount++;
+		ga('send', 'event', 'loop');
 		this.play();
 	} );
 	</script>
